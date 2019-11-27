@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.point.dao.APointPleaseForgeinDao">
+    <resultMap id="APointPleaseForgein" type="com.attiot.railAnaly.point.entity.APointPleaseForgein">
+        <id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+<result property="forgeinType" column="forgein_type" javaType="Integer" jdbcType="INTEGER"/>
+<result property="taskId" column="task_id" javaType="String" jdbcType="VARCHAR"/>
+<result property="trainNo" column="train_no" javaType="String" jdbcType="VARCHAR"/>
+<result property="majorName" column="major_name" javaType="String" jdbcType="VARCHAR"/>
+<result property="majorId" column="major_id" javaType="String" jdbcType="VARCHAR"/>
+<result property="jobContent" column="job_content" javaType="String" jdbcType="LONGVARCHAR"/>
+<result property="workingTime" column="workingTime" javaType="String" jdbcType="VARCHAR"/>
+<result property="pointHours" column="point_hours" javaType="float" jdbcType="DECIMAL"/>
+<result property="jobType" column="job_type" javaType="Integer" jdbcType="INTEGER"/>
+<result property="highWorkType" column="highWork_type" javaType="String" jdbcType="VARCHAR"/>
+<result property="highLevel" column="high_level" javaType="Integer" jdbcType="INTEGER"/>
+<result property="highStep" column="high_step" javaType="Integer" jdbcType="INTEGER"/>
+<result property="users" column="users" javaType="String" jdbcType="LONGVARCHAR"/>
+<result property="brands" column="brands" javaType="String" jdbcType="LONGVARCHAR"/>
+<result property="worker" column="worker" javaType="String" jdbcType="VARCHAR"/>
+        <result property="state" column="state" javaType="Integer" jdbcType="INTEGER"/>
+<result property="remarks" column="remarks" javaType="String" jdbcType="VARCHAR"/>
+
+<result property="createtime" column="createtime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+<result property="modifytime" column="modifytime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+
+    </resultMap>
+    <insert id="insert" parameterType="com.attiot.railAnaly.point.entity.APointPleaseForgein">
+        INSERT INTO a_point_please_forgein
+        (id,<include refid="column"/>)
+        VALUES (
+        #{id},
+        #{forgeinType,jdbcType=INTEGER},
+    #{taskId,jdbcType=VARCHAR},
+    #{trainNo,jdbcType=VARCHAR},
+    #{majorName,jdbcType=VARCHAR},
+    #{majorId,jdbcType=VARCHAR},
+    #{jobContent,jdbcType=LONGVARCHAR},
+    #{workingTime,jdbcType=VARCHAR},
+    #{pointHours,jdbcType=DECIMAL},
+    #{jobType,jdbcType=INTEGER},
+    #{highWorkType,jdbcType=VARCHAR},
+    #{highLevel,jdbcType=INTEGER},
+    #{highStep,jdbcType=INTEGER},
+    #{users,jdbcType=LONGVARCHAR},
+    #{brands,jdbcType=LONGVARCHAR},
+        #{worker},
+        #{state},
+    #{remarks,jdbcType=VARCHAR},
+   now(),
+    now()
+        )
+
+    </insert>
+
+    <update id="update" parameterType="com.attiot.railAnaly.point.entity.APointPleaseForgein">
+        UPDATE a_point_please_forgein
+        SET
+        `forgein_type` = #{forgeinType},
+    `task_id` = #{taskId},
+    `train_no` = #{trainNo},
+
+    `major_name` = #{majorName},
+    `major_id` = #{majorId},
+    `job_content` = #{jobContent},
+    `workingTime` = #{workingTime},
+    `point_hours` = #{pointHours},
+    `job_type` = #{jobType},
+    `highWork_type` = #{highWorkType},
+    `high_level` = #{highLevel},
+    `high_step` = #{highStep},
+    `users` = #{users},
+    `brands` = #{brands},
+     worker = #{worker},
+     state = #{state},
+    `remarks` = #{remarks},
+    `modifytime` = now()
+        WHERE ID = #{id}
+    </update>
+
+    <select id="query" parameterType="com.attiot.railAnaly.point.param.APointPleaseForgeinQueryParam" resultMap="APointPleaseForgein">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_point_please_forgein
+        <include refid="where"/>
+        <include refid="basic"/>
+    </select>
+
+
+    <select id="getByParam" parameterType="com.attiot.railAnaly.point.param.APointPleaseForgeinQueryParam" resultMap="APointPleaseForgein">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_point_please_forgein
+        <include refid="where"/>
+        LIMIT 1
+    </select>
+
+
+    <select id="getForgeinList" parameterType="com.attiot.railAnaly.point.param.APointPleaseForgeinQueryParam" resultMap="APointPleaseForgein">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_point_please_forgein
+        <include refid="where"/>
+    </select>
+
+
+    <select id="getByMajor" parameterType="String" resultMap="APointPleaseForgein">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_point_please_forgein
+        where  `major_name` = #{majorName}
+    </select>
+
+    <select id="getById" parameterType="String"  resultMap="APointPleaseForgein">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_point_please_forgein
+        <where>
+            ID = #{id}
+        </where>
+    </select>
+
+    <select id="queryCount" parameterType="com.attiot.railAnaly.point.param.APointPleaseForgeinQueryParam" resultType="Long">
+        SELECT COUNT(0)
+        FROM a_point_please_forgein
+        <include refid="where"/>
+    </select>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM a_point_please_forgein WHERE ID = #{id}
+    </delete>
+
+    <sql id="column">
+        `forgein_type`,
+    `task_id`,
+    `train_no`,
+
+    `major_name`,
+    `major_id`,
+    `job_content`,
+    `workingTime`,
+    `point_hours`,
+    `job_type`,
+    `highWork_type`,
+    `high_level`,
+    `high_step`,
+    `users`,
+    `brands`,
+     worker,
+     state,
+    `remarks`,
+    `createtime`,
+    `modifytime`
+    </sql>
+
+    <sql id="columnTable">
+        a_point_please_forgein.`forgein_type`,
+    a_point_please_forgein.`task_id`,
+    a_point_please_forgein.`train_no`,
+    a_point_please_forgein.`major_name`,
+    a_point_please_forgein.`major_id`,
+    a_point_please_forgein.`job_content`,
+    a_point_please_forgein.`workingTime`,
+    a_point_please_forgein.`point_hours`,
+    a_point_please_forgein.`job_type`,
+    a_point_please_forgein.`highWork_type`,
+    a_point_please_forgein.`high_level`,
+    a_point_please_forgein.`high_step`,
+    a_point_please_forgein.`users`,
+    a_point_please_forgein.`brands`,
+    a_point_please_forgein.`remarks`,
+    a_point_please_forgein.`createtime`,
+    a_point_please_forgein.`modifytime`
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id != null"> AND id = #{id}</if>
+<if test="forgeinType != null"> AND forgein_type = #{forgeinType}</if>
+    <if test="taskId != null"> AND task_id = #{taskId}</if>
+    <if test="trainNo != null"> AND train_no = #{trainNo}</if>
+    <if test="majorName != null"> AND major_name = #{majorName}</if>
+    <if test="majorId != null"> AND major_id = #{majorId}</if>
+    <if test="jobContent != null"> AND job_content = #{jobContent}</if>
+    <if test="workingTime != null"> AND workingTime = #{workingTime}</if>
+    <if test="pointHours != null"> AND point_hours = #{pointHours}</if>
+    <if test="jobType != null"> AND job_type = #{jobType}</if>
+    <if test="highWorkType != null"> AND highWork_type = #{highWorkType}</if>
+    <if test="highLevel != null"> AND high_level = #{highLevel}</if>
+    <if test="highStep != null"> AND high_step = #{highStep}</if>
+    <if test="users != null"> AND users = #{users}</if>
+    <if test="brands != null"> AND brands = #{brands}</if>
+    <if test="state != null"> AND state = #{state}</if>
+    <if test="worker != null"> AND worker = #{worker}</if>
+    <if test="remarks != null"> AND remarks = #{remarks}</if>
+    <if test="createtime != null"> AND createtime = #{createtime}</if>
+    <if test="modifytime != null"> AND modifytime = #{modifytime}</if>
+        </where>
+    </sql>
+
+    <sql id="basic">
+        <if test="column != null">
+            ORDER BY #{column} #{sort}
+        </if>
+        <if test="pageNo != -1">
+            LIMIT #{startIndex},#{pageSize}
+        </if>
+        <if test="pageNo == -1 and limit != -1">
+            LIMIT #{limit}
+        </if>
+        <if test="lock">
+            <if test="lockMode == 0">
+                FOR UPDATE
+            </if>
+            <if test="lockMode == 1">
+                LOCK IN SHARE MODE
+            </if>
+        </if>
+    </sql>
+</mapper>

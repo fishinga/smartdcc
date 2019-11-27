@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.fault.dao.AFaultListDao">
+    <resultMap id="AFaultList" type="com.attiot.railAnaly.fault.entity.AFaultList">
+        <id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+<result property="trainNo" column="train_no" javaType="String" jdbcType="VARCHAR"/>
+<result property="trainUnit" column="train_unit" javaType="String" jdbcType="VARCHAR"/>
+<result property="jobId" column="job_id" javaType="String" jdbcType="VARCHAR"/>
+<result property="auditType" column="audit_type" javaType="Integer" jdbcType="INTEGER"/>
+<result property="teamDepartId" column="team_depart_id" javaType="String" jdbcType="VARCHAR"/>
+<result property="ppointId" column="ppoint_id" javaType="String" jdbcType="LONGVARCHAR"/>
+<result property="taskName" column="task_name" javaType="String" jdbcType="VARCHAR"/>
+<result property="workState" column="work_state" javaType="Integer" jdbcType="INTEGER"/>
+<result property="factoryJob" column="factory_job" javaType="Integer" jdbcType="INTEGER"/>
+
+<result property="faultLevel" column="fault_level" javaType="String" jdbcType="VARCHAR"/>
+<result property="faultDepart" column="fault_depart" javaType="String" jdbcType="VARCHAR"/>
+
+<result property="workDate" column="work_date" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+<result property="scheOperators" column="sche_operators" javaType="String" jdbcType="VARCHAR"/>
+<result property="flowOperators" column="flow_operators" javaType="String" jdbcType="VARCHAR"/>
+<result property="actualOperators" column="actual_operators" javaType="String" jdbcType="VARCHAR"/>
+<result property="startJob" column="start_job" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+<result property="finishJob" column="finish_job" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+<result property="taskHours" column="task_hours" javaType="float" jdbcType="DECIMAL"/>
+<result property="coeDiff" column="coe_diff" javaType="float" jdbcType="DECIMAL"/>
+<result property="coeOvertime" column="coe_overtime" javaType="float" jdbcType="DECIMAL"/>
+<result property="coeCooperation" column="coe_cooperation" javaType="float" jdbcType="DECIMAL"/>
+<result property="remarks" column="remarks" javaType="String" jdbcType="LONGVARCHAR"/>
+<result property="doFaultRemarks" column="do_fault_remarks" javaType="String" jdbcType="LONGVARCHAR"/>
+<result property="assignTime" column="assign_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+<result property="creator" column="creator" javaType="String" jdbcType="VARCHAR"/>
+<result property="createtime" column="createtime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+<result property="modifor" column="modifor" javaType="String" jdbcType="VARCHAR"/>
+<result property="modifytime" column="modifytime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+<result property="mutualOperations" column="mutual_operations" javaType="String" jdbcType="VARCHAR"/>
+<result property="speOperations" column="spe_operations" javaType="String" jdbcType="VARCHAR"/>
+<result property="surplusValue" column="surplus_value" javaType="float" jdbcType="DECIMAL"/>
+
+    </resultMap>
+    <insert id="insert" parameterType="com.attiot.railAnaly.fault.entity.AFaultList">
+        INSERT INTO a_fault_list
+        (id,<include refid="column"/>)
+        VALUES (
+        md5(uuid()),
+        #{trainNo,jdbcType=VARCHAR},
+    #{trainUnit,jdbcType=VARCHAR},
+    #{jobId,jdbcType=VARCHAR},
+    #{auditType,jdbcType=INTEGER},
+    #{teamDepartId,jdbcType=VARCHAR},
+    #{ppointId,jdbcType=LONGVARCHAR},
+    #{taskName,jdbcType=VARCHAR},
+    #{workState,jdbcType=INTEGER},
+        #{factoryJob},
+    #{faultLevel},
+    #{faultDepart},
+    #{workDate,jdbcType=TIMESTAMP},
+    #{scheOperators,jdbcType=VARCHAR},
+    #{flowOperators,jdbcType=VARCHAR},
+    #{actualOperators,jdbcType=VARCHAR},
+    #{startJob,jdbcType=TIMESTAMP},
+    #{finishJob,jdbcType=TIMESTAMP},
+    #{taskHours,jdbcType=DECIMAL},
+    #{coeDiff,jdbcType=DECIMAL},
+    #{coeOvertime,jdbcType=DECIMAL},
+    #{coeCooperation,jdbcType=DECIMAL},
+    #{remarks,jdbcType=LONGVARCHAR},
+    #{doFaultRemarks,jdbcType=LONGVARCHAR},
+    #{assignTime},
+    #{creator},
+    now(),
+    #{modifor,jdbcType=VARCHAR},
+    now(),
+    #{mutualOperations,jdbcType=VARCHAR},
+    #{speOperations,jdbcType=VARCHAR},
+    #{surplusValue,jdbcType=DECIMAL}
+        )
+
+    </insert>
+
+    <update id="update" parameterType="com.attiot.railAnaly.fault.entity.AFaultList">
+        UPDATE a_fault_list
+        SET
+        `train_no` = #{trainNo},
+    `train_unit` = #{trainUnit},
+    `job_id` = #{jobId},
+    `audit_type` = #{auditType},
+    `team_depart_id` = #{teamDepartId},
+    `ppoint_id` = #{ppointId},
+    `task_name` = #{taskName},
+    `work_state` = #{workState},
+     factory_job=#{factoryJob},
+     fault_level=#{faultLevel},
+     fault_depart=#{faultDepart},
+    `work_date` = #{workDate},
+    `sche_operators` = #{scheOperators},
+    `flow_operators` = #{flowOperators},
+    `actual_operators` = #{actualOperators},
+    `start_job` = #{startJob},
+    `finish_job` = #{finishJob},
+    `task_hours` = #{taskHours},
+    `coe_diff` = #{coeDiff},
+    `coe_overtime` = #{coeOvertime},
+    `coe_cooperation` = #{coeCooperation},
+    `remarks` = #{remarks},
+    `do_fault_remarks` = #{doFaultRemarks},
+    `assign_time` = #{assignTime},
+    `modifor` = #{modifor},
+    `modifytime` = now(),
+    `mutual_operations` = #{mutualOperations},
+    `spe_operations` = #{speOperations},
+    `surplus_value` = #{surplusValue}
+        WHERE ID = #{id}
+    </update>
+
+    <update id="finishFaultList" parameterType="Map">
+        UPDATE a_fault_list
+        SET
+        `work_state` = #{workState},
+        `finish_job` = now(),
+        `remarks` = #{remarks},
+        `do_fault_remarks` = #{doFaultRemarks},
+        `modifor` = #{modifor},
+        `modifytime` = now(),
+        `surplus_value` = #{surplusValue},
+        `mutual_operations`=#{mutualOperations},
+        `spe_operations`=#{speOperations}
+        WHERE ID = #{id}
+    </update>
+
+
+    <update id="updateWorkState" parameterType="Map">
+        UPDATE a_fault_list
+        SET
+        `work_state` = #{workState},
+        `modifor` = #{modifor},
+<!--        <if test="finishJob != null and finishJob != ''">-->
+<!--          `finish_job` =  #{finishJob},-->
+<!--        </if>-->
+        <choose>
+            <when test="finishJob != null and finishJob != ''">
+                `finish_job` =  #{finishJob},
+            </when>
+            <otherwise>
+                `finish_job` = now(),
+            </otherwise>
+        </choose>
+
+        `modifytime` = now()
+        WHERE ID = #{id}
+    </update>
+    <select id="query" parameterType="com.attiot.railAnaly.fault.param.AFaultListQueryParam" resultMap="AFaultList">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_fault_list
+        <where>
+            <if test="scheOperators!=null and scheOperators!=''"> and find_in_set(#{scheOperators},sche_operators)>0</if>
+            <if test="jobId != null and jobId != ''"> AND job_id = #{jobId}</if>
+            <if test="trainNo != null and trainNo != ''"> AND train_no = #{trainNo}</if>
+            <if test="faultDepart != null and faultDepart != ''"> AND fault_depart = #{faultDepart}</if>
+            <if test="faultLevel != null and faultLevel != ''"> AND fault_level = #{faultLevel}</if>
+        </where>
+        <include refid="basic"/>
+    </select>
+
+    <select id="queryByJobId" parameterType="String"  resultMap="AFaultList">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_fault_list
+        where job_id = #{jobId}
+        order by assign_time desc
+    </select>
+
+    <select id="getByUserId" parameterType="String"  resultMap="AFaultList">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_fault_list
+        where find_in_set(#{userId},sche_operators)>0
+        order by assign_time desc
+    </select>
+
+
+    <select id="getByJobId" parameterType="String"  resultMap="AFaultList">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_fault_list
+        where job_id=#{jobId}
+        order by assign_time desc
+    </select>
+
+    <!--获取我的未完成故障工单-->
+    <select id="getMyUnfinishFaultList" parameterType="Map" resultMap="AFaultList">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_fault_list
+        where
+        find_in_set(#{userId},sche_operators)>0
+        and find_in_set(work_state,#{workState})>0
+    </select>
+
+
+    <select id="getByParam" parameterType="com.attiot.railAnaly.fault.param.AFaultListQueryParam" resultMap="AFaultList">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_fault_list
+        <include refid="where"/>
+        LIMIT 1
+    </select>
+
+
+    <select id="getById" parameterType="String"  resultMap="AFaultList">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_fault_list
+        <where>
+            ID = #{id}
+        </where>
+    </select>
+
+    <!--  根据多个ID，查询故障工单信息  begin -->
+    <select id="getFaultByIds"  resultMap="AFaultList">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_fault_list
+        WHERE
+        ID in
+        <foreach collection="array" item="id" index="index"
+                 open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+    <!--  根据多个ID，查询故障工单信息  end -->
+
+
+    <!--  修改故障工单的请点ID begin -->
+    <update id="editFaultPoint" >
+        UPDATE a_fault_list
+        SET
+        `ppoint_id` = CONCAT(IFNULL(ppoint_id , ''), ',',#{pointId})
+        WHERE ID in
+        <foreach collection="ids" item="item" index="index"
+                 open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+    <!--  修改故障工单的请点ID end  -->
+
+    <!--修改故障工单的请点ID和状态-->
+    <update id="updateWorkStateAndPointByIds" parameterType="Map">
+        UPDATE a_fault_list
+        SET
+        ppoint_id = #{ppointId},
+        `work_state` = #{FaultWorkState},
+        `modifytime` = now()
+        WHERE find_in_set(ID, #{ids})>0
+    </update>
+
+    <!--根据请点ID查询故障信息-->
+    <select id="getFaultByPointId" parameterType="String" resultMap="AFaultList">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_fault_list
+        WHERE  find_in_set(#{pointId},ppoint_id)>0
+    </select>
+
+    <!--  根据请点ID和当前状态更新故障工单状态 begin -->
+    <update id="editFaultWorkState" >
+        UPDATE a_fault_list
+        SET work_state = #{newWorkState},
+        start_job = now()
+        WHERE find_in_set(#{pointId},ppoint_id)>0
+        AND  work_state = #{curWorkState}
+    </update>
+    <!--  根据请点ID和当前状态更新任务状态 end  -->
+
+    <!-- ***********  根据任务ID和请点类型判断是否有请点过的任务  begin ************-->
+    <select id="checkTaskRequested"   resultMap="AFaultList">
+        SELECT
+        tl.*
+        FROM
+        a_point_please pp,
+        a_fault_list tl
+        WHERE
+        FIND_IN_SET(tl.id, #{taskIds}) > 0
+        AND FIND_IN_SET(pp.id, tl.ppoint_id) >0
+        and pp.point_type = #{pointType}
+        and pp.bpm_status != '4'
+    </select>
+    <!-- ***********  根据任务ID和请点类型判断是否有请点过的任务  end ************-->
+
+    <select id="queryCount" parameterType="com.attiot.railAnaly.fault.param.AFaultListQueryParam" resultType="Long">
+        SELECT COUNT(0)
+        FROM a_fault_list
+        <where>
+            <if test="scheOperators!=null and scheOperators!=''">and find_in_set(#{scheOperators},sche_operators)>0</if>
+            <if test="jobId != null and jobId != ''"> AND job_id = #{jobId}</if>
+            <if test="trainNo != null and trainNo != ''"> AND train_no = #{trainNo}</if>
+            <if test="faultDepart != null and faultDepart != ''"> AND fault_depart = #{faultDepart}</if>
+            <if test="faultLevel != null and faultLevel != ''"> AND fault_level = #{faultLevel}</if>
+        </where>
+    </select>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM a_fault_list WHERE ID = #{id}
+    </delete>
+
+    <sql id="column">
+        `train_no`,
+    `train_unit`,
+    `job_id`,
+    `audit_type`,
+    `team_depart_id`,
+    `ppoint_id`,
+    `task_name`,
+    `work_state`,
+    factory_job,
+    fault_level,
+    fault_depart,
+    `work_date`,
+    `sche_operators`,
+    `flow_operators`,
+    `actual_operators`,
+    `start_job`,
+    `finish_job`,
+    `task_hours`,
+    `coe_diff`,
+    `coe_overtime`,
+    `coe_cooperation`,
+    `remarks`,
+    `do_fault_remarks`,
+    `assign_time`,
+    `creator`,
+    `createtime`,
+    `modifor`,
+    `modifytime`,
+    `mutual_operations`,
+    `spe_operations`,
+    `surplus_value`
+    </sql>
+
+    <sql id="columnTable">
+        a_fault_list.`train_no`,
+    a_fault_list.`train_unit`,
+    a_fault_list.`job_id`,
+    a_fault_list.`audit_type`,
+    a_fault_list.`team_depart_id`,
+    a_fault_list.`ppoint_id`,
+    a_fault_list.`task_name`,
+    a_fault_list.`work_state`,
+    a_fault_list.`work_date`,
+    a_fault_list.`sche_operators`,
+    a_fault_list.`flow_operators`,
+    a_fault_list.`actual_operators`,
+    a_fault_list.`start_job`,
+    a_fault_list.`finish_job`,
+    a_fault_list.`task_hours`,
+    a_fault_list.`coe_diff`,
+    a_fault_list.`coe_overtime`,
+    a_fault_list.`coe_cooperation`,
+    a_fault_list.`remarks`,
+    a_fault_list.`do_fault_remarks`,
+    a_fault_list.`assign_time`,
+    a_fault_list.`creator`,
+    a_fault_list.`createtime`,
+    a_fault_list.`modifor`,
+    a_fault_list.`modifytime`,
+    a_fault_list.`mutual_operations`,
+    a_fault_list.`spe_operations`,
+    a_fault_list.`surplus_value`
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id != null"> AND id = #{id}</if>
+<if test="trainNo != null"> AND train_no = #{trainNo}</if>
+    <if test="trainUnit != null"> AND train_unit = #{trainUnit}</if>
+    <if test="jobId != null"> AND job_id = #{jobId}</if>
+    <if test="auditType != null"> AND audit_type = #{auditType}</if>
+    <if test="teamDepartId != null"> AND team_depart_id = #{teamDepartId}</if>
+    <if test="ppointId != null"> AND ppoint_id = #{ppointId}</if>
+    <if test="taskName != null"> AND task_name = #{taskName}</if>
+    <if test="workState != null"> AND work_state = #{workState}</if>
+    <if test="workDate != null"> AND work_date = #{workDate}</if>
+    <if test="scheOperators != null"> AND sche_operators = #{scheOperators}</if>
+    <if test="flowOperators != null"> AND flow_operators = #{flowOperators}</if>
+    <if test="actualOperators != null"> AND actual_operators = #{actualOperators}</if>
+    <if test="startJob != null"> AND start_job = #{startJob}</if>
+    <if test="finishJob != null"> AND finish_job = #{finishJob}</if>
+    <if test="taskHours != null"> AND task_hours = #{taskHours}</if>
+    <if test="coeDiff != null"> AND coe_diff = #{coeDiff}</if>
+    <if test="coeOvertime != null"> AND coe_overtime = #{coeOvertime}</if>
+    <if test="coeCooperation != null"> AND coe_cooperation = #{coeCooperation}</if>
+    <if test="remarks != null"> AND remarks = #{remarks}</if>
+    <if test="doFaultRemarks != null"> AND do_fault_remarks = #{doFaultRemarks}</if>
+    <if test="assignTime != null"> AND assign_time = #{assignTime}</if>
+    <if test="creator != null"> AND creator = #{creator}</if>
+    <if test="createtime != null"> AND createtime = #{createtime}</if>
+    <if test="modifor != null"> AND modifor = #{modifor}</if>
+    <if test="modifytime != null"> AND modifytime = #{modifytime}</if>
+    <if test="mutualOperations != null"> AND mutual_operations = #{mutualOperations}</if>
+    <if test="speOperations != null"> AND spe_operations = #{speOperations}</if>
+    <if test="surplusValue != null"> AND surplus_value = #{surplusValue}</if>
+        </where>
+    </sql>
+
+    <sql id="basic">
+        <if test="column != null">
+            ORDER BY #{column} #{sort}
+        </if>
+        <if test="pageNo != -1">
+            LIMIT #{startIndex},#{pageSize}
+        </if>
+        <if test="pageNo == -1 and limit != -1">
+            LIMIT #{limit}
+        </if>
+        <if test="lock">
+            <if test="lockMode == 0">
+                FOR UPDATE
+            </if>
+            <if test="lockMode == 1">
+                LOCK IN SHARE MODE
+            </if>
+        </if>
+    </sql>
+</mapper>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.task.dao.TaskTempDao">
+	<resultMap id="TaskTemp" type="com.attiot.railAnaly.task.entity.TaskTemp">
+		<id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="jobname" column="jobname" javaType="String" jdbcType="VARCHAR"/>
+		<result property="contents" column="contents" javaType="String" jdbcType="VARCHAR"/>
+		<result property="startDate" column="start_date" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="endDate" column="end_date" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="trainNo" column="train_no" javaType="String" jdbcType="VARCHAR"/>
+		<result property="teamDepartId" column="team_depart_id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="taskHours" column="task_hours" javaType="Double" jdbcType="DECIMAL"/>
+		<result property="coeDiff" column="coe_diff" javaType="Double" jdbcType="DECIMAL"/>
+		<result property="coeOvertime" column="coe_overtime" javaType="Double" jdbcType="DECIMAL"/>
+		<result property="coeCooperation" column="coe_cooperation" javaType="Double" jdbcType="DECIMAL"/>
+		<result property="tempType" column="temp_type" javaType="Integer" jdbcType="INTEGER"/>
+		<result property="lastGenerate" column="last_generate" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="attachePath" column="attache_path" javaType="String" jdbcType="VARCHAR"/>
+		<result property="tempSource" column="temp_source" javaType="Integer" jdbcType="INTEGER"/>
+		<result property="creator" column="creator" javaType="String" jdbcType="VARCHAR"/>
+		<result property="createtime" column="createtime" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="modifor" column="modifor" javaType="String" jdbcType="VARCHAR"/>
+		<result property="modifytime" column="modifytime" javaType="Date" jdbcType="TIMESTAMP"/>
+
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.attiot.railAnaly.task.entity.TaskTemp">
+		INSERT INTO a_task_temp
+		(
+			id,
+			<include refid="column" />
+		) VALUES (
+			#{id,jdbcType=VARCHAR},
+			#{jobname,jdbcType=VARCHAR},
+			#{contents,jdbcType=VARCHAR},
+			#{startDate,jdbcType=TIMESTAMP},
+			#{endDate},
+			#{trainNo,jdbcType=VARCHAR},
+			#{teamDepartId,jdbcType=VARCHAR},
+			#{taskHours,jdbcType=DECIMAL},
+			#{coeDiff,jdbcType=DECIMAL},
+			#{coeOvertime,jdbcType=DECIMAL},
+			#{coeCooperation,jdbcType=DECIMAL},
+			#{tempType,jdbcType=INTEGER},
+			#{lastGenerate,jdbcType=TIMESTAMP},
+			#{attachePath,jdbcType=VARCHAR},
+			#{tempSource},
+			#{creator,jdbcType=VARCHAR},
+			#{createtime,jdbcType=TIMESTAMP},
+			#{modifor,jdbcType=VARCHAR},
+			#{modifytime,jdbcType=TIMESTAMP}
+		)
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT REPLACE(UUID(),'-','')
+		</selectKey>
+	</insert>
+
+	<update id="update" parameterType="com.attiot.railAnaly.task.entity.TaskTemp">
+		UPDATE a_task_temp
+		SET
+			`jobname` = #{jobname},
+			`contents` = #{contents},
+			`start_date` = #{startDate},
+			end_date = #{endDate},
+			`train_no` = #{trainNo},
+			`team_depart_id` = #{teamDepartId},
+			`task_hours` = #{taskHours},
+			`coe_diff` = #{coeDiff},
+			`coe_overtime` = #{coeOvertime},
+			`coe_cooperation` = #{coeCooperation},
+			`temp_type` = #{tempType},
+			`last_generate` = #{lastGenerate},
+			`attache_path` = #{attachePath},
+			temp_source=#{tempSource},
+			`creator` = #{creator},
+			`createtime` = #{createtime},
+			`modifor` = #{modifor},
+			`modifytime` = #{modifytime}
+		WHERE ID = #{id}
+	</update>
+
+	<delete id="delete" parameterType="String">
+		DELETE FROM a_task_temp WHERE ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="String" resultMap="TaskTemp">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM a_task_temp
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+
+	<select id="getByParam" parameterType="com.attiot.railAnaly.task.param.TaskTempQueryParam" resultMap="TaskTemp">
+		SELECT ID,
+		<include refid="column" />
+		FROM a_task_temp
+		<include refid="where" />
+		LIMIT 1
+	</select>
+
+	<select id="query" parameterType="com.attiot.railAnaly.task.param.TaskTempQueryParam"	resultMap="TaskTemp">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM a_task_temp
+		<include refid="where" />
+		<include refid="basic" />
+	</select>
+
+	<select id="queryCount" parameterType="com.attiot.railAnaly.task.param.TaskTempQueryParam" resultType="Long">
+		SELECT COUNT(0)
+		FROM a_task_temp
+		<include refid="where" />
+	</select>
+
+	<sql id="column">
+		`jobname`,
+		`contents`,
+		`start_date`,
+		end_date,
+		`train_no`,
+		`team_depart_id`,
+		`task_hours`,
+		`coe_diff`,
+		`coe_overtime`,
+		`coe_cooperation`,
+		`temp_type`,
+		`last_generate`,
+		`attache_path`,
+		temp_source,
+		`creator`,
+		`createtime`,
+		`modifor`,
+		`modifytime`
+	</sql>
+
+	<sql id="columnTable">
+		a_task_temp.`jobname`,
+		a_task_temp.`contents`,
+		a_task_temp.`start_date`,
+		a_task_temp.end_date,
+		a_task_temp.`train_no`,
+		a_task_temp.`team_depart_id`,
+		a_task_temp.`task_hours`,
+		a_task_temp.`coe_diff`,
+		a_task_temp.`coe_overtime`,
+		a_task_temp.`coe_cooperation`,
+		a_task_temp.`temp_type`,
+		a_task_temp.`last_generate`,
+		a_task_temp.`attache_path`,
+		a_task_temp.`creator`,
+		a_task_temp.`createtime`,
+		a_task_temp.`modifor`,
+		a_task_temp.`modifytime`
+	</sql>
+
+	<sql id="where">
+		<where>
+			<if test="id != null"> AND id = #{id}</if>
+			<if test="jobname != null"> AND jobname = #{jobname}</if>
+			<if test="contents != null"> AND contents = #{contents}</if>
+
+			<if test="trainNo != null"> AND train_no = #{trainNo}</if>
+			<if test="teamDepartId != null"> AND team_depart_id = #{teamDepartId}</if>
+			<if test="taskHours != null"> AND task_hours = #{taskHours}</if>
+			<if test="coeDiff != null"> AND coe_diff = #{coeDiff}</if>
+			<if test="coeOvertime != null"> AND coe_overtime = #{coeOvertime}</if>
+			<if test="coeCooperation != null"> AND coe_cooperation = #{coeCooperation}</if>
+			<if test="tempType != null"> AND temp_type = #{tempType}</if>
+			<if test="lastGenerate != null"> AND last_generate = #{lastGenerate}</if>
+			<if test="attachePath != null"> AND attache_path = #{attachePath}</if>
+			<if test="creator != null"> AND creator = #{creator}</if>
+			<if test="createtime != null"> AND createtime = #{createtime}</if>
+			<if test="modifor != null"> AND modifor = #{modifor}</if>
+			<if test="modifytime != null"> AND modifytime = #{modifytime}</if>
+		</where>
+	</sql>
+
+	<sql id="basic">
+		<if test="column != null">ORDER BY #{column} #{sort}</if>
+		<if test="pageNo != -1">LIMIT #{startIndex}, #{pageSize}</if>
+		<if test="pageNo == -1 and limit != -1">LIMIT #{limit}</if>
+		<if test="lock">
+			<if test="lockMode == 0">FOR UPDATE</if>
+			<if test="lockMode == 1">LOCK IN SHARE MODE</if>
+		</if>
+	</sql>
+</mapper>

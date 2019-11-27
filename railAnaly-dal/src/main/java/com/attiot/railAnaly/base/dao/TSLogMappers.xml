@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.base.dao.TSLogDao">
+	<resultMap id="TSLog" type="com.attiot.railAnaly.base.entity.TSLog">
+		<id property="id" column="ID" javaType="String" jdbcType="VARCHAR"/>
+		<result property="broswer" column="broswer" javaType="String" jdbcType="VARCHAR"/>
+		<result property="logcontent" column="logcontent" javaType="String" jdbcType="VARCHAR"/>
+		<result property="loglevel" column="loglevel" javaType="Integer" jdbcType="SMALLINT"/>
+		<result property="note" column="note" javaType="String" jdbcType="VARCHAR"/>
+		<result property="operatetime" column="operatetime" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="operatetype" column="operatetype" javaType="Integer" jdbcType="SMALLINT"/>
+		<result property="userid" column="userid" javaType="String" jdbcType="VARCHAR"/>
+
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.attiot.railAnaly.base.entity.TSLog">
+		INSERT INTO t_s_log
+		(
+			id,
+			<include refid="column" />
+		) VALUES (
+			#{id,jdbcType=VARCHAR},
+			#{broswer,jdbcType=VARCHAR},
+			#{logcontent,jdbcType=VARCHAR},
+			#{loglevel,jdbcType=SMALLINT},
+			#{note,jdbcType=VARCHAR},
+			#{operatetime,jdbcType=TIMESTAMP},
+			#{operatetype,jdbcType=SMALLINT},
+			#{userid,jdbcType=VARCHAR}
+		)
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT REPLACE(UUID(),'-','')
+		</selectKey>
+	</insert>
+
+	<update id="update" parameterType="com.attiot.railAnaly.base.entity.TSLog">
+		UPDATE t_s_log
+		SET
+			`broswer` = #{broswer},
+			`logcontent` = #{logcontent},
+			`loglevel` = #{loglevel},
+			`note` = #{note},
+			`operatetime` = #{operatetime},
+			`operatetype` = #{operatetype},
+			`userid` = #{userid}
+		WHERE ID = #{id}
+	</update>
+
+	<delete id="delete" parameterType="String">
+		DELETE FROM t_s_log WHERE ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="String" resultMap="TSLog">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM t_s_log
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+
+	<select id="getByParam" parameterType="com.attiot.railAnaly.base.param.TSLogQueryParam" resultMap="TSLog">
+		SELECT ID,
+		<include refid="column" />
+		FROM t_s_log
+		<include refid="where" />
+		LIMIT 1
+	</select>
+
+	<select id="query" parameterType="com.attiot.railAnaly.base.param.TSLogQueryParam"	resultMap="TSLog">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM t_s_log
+		<include refid="where" />
+		<include refid="basic" />
+	</select>
+
+	<select id="queryCount" parameterType="com.attiot.railAnaly.base.param.TSLogQueryParam" resultType="Long">
+		SELECT COUNT(0)
+		FROM t_s_log
+		<include refid="where" />
+	</select>
+
+	<sql id="column">
+		`broswer`,
+		`logcontent`,
+		`loglevel`,
+		`note`,
+		`operatetime`,
+		`operatetype`,
+		`userid`
+	</sql>
+
+	<sql id="columnTable">
+		t_s_log.`broswer`,
+		t_s_log.`logcontent`,
+		t_s_log.`loglevel`,
+		t_s_log.`note`,
+		t_s_log.`operatetime`,
+		t_s_log.`operatetype`,
+		t_s_log.`userid`
+	</sql>
+
+	<sql id="where">
+		<where>
+			<if test="id != null"> AND ID = #{id}</if>
+			<if test="broswer != null"> AND broswer = #{broswer}</if>
+			<if test="logcontent != null"> AND logcontent = #{logcontent}</if>
+			<if test="loglevel != null"> AND loglevel = #{loglevel}</if>
+			<if test="note != null"> AND note = #{note}</if>
+			<if test="operatetime != null"> AND operatetime = #{operatetime}</if>
+			<if test="operatetype != null"> AND operatetype = #{operatetype}</if>
+			<if test="userid != null"> AND userid = #{userid}</if>
+		</where>
+	</sql>
+
+	<sql id="basic">
+		<if test="column != null">ORDER BY #{column} #{sort}</if>
+		<if test="pageNo != -1">LIMIT #{startIndex}, #{pageSize}</if>
+		<if test="pageNo == -1 and limit != -1">LIMIT #{limit}</if>
+		<if test="lock">
+			<if test="lockMode == 0">FOR UPDATE</if>
+			<if test="lockMode == 1">LOCK IN SHARE MODE</if>
+		</if>
+	</sql>
+</mapper>

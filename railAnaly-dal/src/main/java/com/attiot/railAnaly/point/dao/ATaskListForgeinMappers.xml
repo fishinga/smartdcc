@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.point.dao.ATaskListForgeinDao">
+    <resultMap id="ATaskListForgein" type="com.attiot.railAnaly.point.entity.ATaskListForgein">
+        <id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+<result property="sourceNum" column="source_num" javaType="String" jdbcType="VARCHAR"/>
+<result property="trainNo" column="train_no" javaType="String" jdbcType="VARCHAR"/>
+<result property="sourceId" column="source_id" javaType="String" jdbcType="VARCHAR"/>
+<result property="pointId" column="point_id" javaType="String" jdbcType="VARCHAR"/>
+<result property="taskSource" column="task_source" javaType="Integer" jdbcType="INTEGER"/>
+<result property="taskName" column="task_name" javaType="String" jdbcType="VARCHAR"/>
+<result property="workState" column="work_state" javaType="Integer" jdbcType="INTEGER"/>
+<result property="startWorkDate" column="start_work_date" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+<result property="endWorkDate" column="end_work_date" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+<result property="startJob" column="start_job" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+<result property="finishJob" column="finish_job" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+<result property="remarks" column="remarks" javaType="String" jdbcType="LONGVARCHAR"/>
+<result property="creator" column="creator" javaType="String" jdbcType="VARCHAR"/>
+<result property="createtime" column="createtime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+<result property="modifor" column="modifor" javaType="String" jdbcType="VARCHAR"/>
+<result property="modifytime" column="modifytime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        <result property="parentTaskId" column="parent_task_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="surplusValue" column="surplus_value"  javaType="float" jdbcType="DECIMAL"/>
+
+    </resultMap>
+    <insert id="insert" parameterType="com.attiot.railAnaly.point.entity.ATaskListForgein">
+        INSERT INTO a_task_list_forgein
+        (id,<include refid="column"/>)
+        VALUES (
+        md5(uuid()),
+        #{sourceNum,jdbcType=VARCHAR},
+    #{trainNo,jdbcType=VARCHAR},
+    #{sourceId,jdbcType=VARCHAR},
+    #{pointId,jdbcType=VARCHAR},
+    #{taskSource,jdbcType=INTEGER},
+    #{taskName,jdbcType=VARCHAR},
+    #{workState,jdbcType=INTEGER},
+    #{startWorkDate,jdbcType=TIMESTAMP},
+    #{endWorkDate},
+    #{startJob,jdbcType=TIMESTAMP},
+    #{finishJob,jdbcType=TIMESTAMP},
+    #{remarks,jdbcType=LONGVARCHAR},
+    #{creator,jdbcType=VARCHAR},
+    #{createtime,jdbcType=TIMESTAMP},
+    #{modifor,jdbcType=VARCHAR},
+    #{modifytime,jdbcType=TIMESTAMP},
+        #{parentTaskId},
+        #{surplusValue}
+        )
+
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO a_task_list_forgein
+        (id,<include refid="column"/>)
+        values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (
+            md5(uuid()),
+            #{item.sourceNum,jdbcType=VARCHAR},
+            #{item.trainNo,jdbcType=VARCHAR},
+            #{item.sourceId,jdbcType=VARCHAR},
+            #{item.pointId,jdbcType=VARCHAR},
+            #{item.taskSource,jdbcType=INTEGER},
+            #{item.taskName,jdbcType=VARCHAR},
+            #{item.workState,jdbcType=INTEGER},
+            #{item.startWorkDate,jdbcType=TIMESTAMP},
+            #{item.endWorkDate},
+            #{item.startJob,jdbcType=TIMESTAMP},
+            #{item.finishJob,jdbcType=TIMESTAMP},
+            #{item.remarks,jdbcType=LONGVARCHAR},
+            #{item.creator,jdbcType=VARCHAR},
+            now(),
+            #{item.modifor,jdbcType=VARCHAR},
+            now(),
+            #{item.parentTaskId},
+            #{item.surplusValue}
+            )
+        </foreach>
+    </insert>
+    <update id="update" parameterType="com.attiot.railAnaly.point.entity.ATaskListForgein">
+        UPDATE a_task_list_forgein
+        SET
+        `source_num` = #{sourceNum},
+    `train_no` = #{trainNo},
+    `source_id` = #{sourceId},
+    `point_id` = #{pointId},
+    `task_source` = #{taskSource},
+    `task_name` = #{taskName},
+    `work_state` = #{workState},
+    `start_work_date` = #{startWorkDate},
+    end_work_date = #{endWorkDate},
+    `start_job` = #{startJob},
+    `finish_job` = #{finishJob},
+    `remarks` = #{remarks},
+    `creator` = #{creator},
+    `createtime` = #{createtime},
+    `modifor` = #{modifor},
+    `modifytime` = #{modifytime},
+    `parent_task_id` = #{parentTaskId},
+    `surplus_value` = #{surplusValue}
+        WHERE ID = #{id}
+    </update>
+
+
+    <update id="updateWorkStateAndPointByIds" parameterType="Map">
+        UPDATE a_task_list_forgein
+        SET
+        point_id = #{ppointId},
+        `work_state` = #{workState},
+        `modifytime` = now()
+        WHERE find_in_set(ID, #{ids})>0
+    </update>
+
+    <update id="updateParentTaskId" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";" >
+            UPDATE a_task_list_forgein
+            SET
+            parent_task_id = #{item.parentTaskId},
+            `modifor` = #{item.modifor},
+            `modifytime` = now()
+            WHERE id=#{item.id}
+        </foreach>
+    </update>
+
+
+    <select id="getById" parameterType="String"  resultMap="ATaskListForgein">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_task_list_forgein
+        <where>
+            ID = #{id}
+        </where>
+    </select>
+
+    <select id="getByIds" parameterType="String"  resultMap="ATaskListForgein">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_task_list_forgein
+        <where>
+            find_in_set(ID,  #{ids})>0
+        </where>
+    </select>
+
+
+    <select id="getUnFinishATaskListForgeinList" resultMap="ATaskListForgein">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_task_list_forgein
+        where work_state=0
+        <![CDATA[
+        AND date_format(now(),'%Y-%m-%d') >= date_format(start_work_date,'%Y-%m-%d')
+        AND date_format(now(),'%Y-%m-%d') <= date_format(end_work_date,'%Y-%m-%d')
+        ]]>
+    </select>
+    <select id="getATaskListForgein" parameterType="Map"  resultMap="ATaskListForgein">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_task_list_forgein
+        where
+        source_num = #{sourceNum}
+        and source_id = #{sourceId}
+        and task_source=#{taskSource}
+        order by train_no
+    </select>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM a_task_list_forgein WHERE ID = #{id}
+    </delete>
+
+    <sql id="column">
+        `source_num`,
+    `train_no`,
+    `source_id`,
+    `point_id`,
+    `task_source`,
+    `task_name`,
+    `work_state`,
+    `start_work_date`,
+    end_work_date,
+    `start_job`,
+    `finish_job`,
+    `remarks`,
+    `creator`,
+    `createtime`,
+    `modifor`,
+    `modifytime`,
+     `parent_task_id`,
+    `surplus_value`
+    </sql>
+
+    <sql id="columnTable">
+        a_task_list_forgein.`source_num`,
+    a_task_list_forgein.`train_no`,
+    a_task_list_forgein.`source_id`,
+    a_task_list_forgein.`point_id`,
+    a_task_list_forgein.`task_source`,
+    a_task_list_forgein.`task_name`,
+    a_task_list_forgein.`work_state`,
+    a_task_list_forgein.`start_work_date`,
+    a_task_list_forgein.`start_job`,
+    a_task_list_forgein.`finish_job`,
+    a_task_list_forgein.`remarks`,
+    a_task_list_forgein.`creator`,
+    a_task_list_forgein.`createtime`,
+    a_task_list_forgein.`modifor`,
+    a_task_list_forgein.`modifytime`
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id != null"> AND id = #{id}</if>
+<if test="sourceNum != null"> AND source_num = #{sourceNum}</if>
+    <if test="trainNo != null"> AND train_no = #{trainNo}</if>
+    <if test="sourceId != null"> AND source_id = #{sourceId}</if>
+    <if test="pointId != null"> AND point_id = #{pointId}</if>
+    <if test="taskSource != null"> AND task_source = #{taskSource}</if>
+    <if test="taskName != null"> AND task_name = #{taskName}</if>
+    <if test="workState != null"> AND work_state = #{workState}</if>
+    <if test="startWorkDate != null"> AND start_work_date = #{startWorkDate}</if>
+    <if test="startJob != null"> AND start_job = #{startJob}</if>
+    <if test="finishJob != null"> AND finish_job = #{finishJob}</if>
+    <if test="remarks != null"> AND remarks = #{remarks}</if>
+    <if test="creator != null"> AND creator = #{creator}</if>
+    <if test="createtime != null"> AND createtime = #{createtime}</if>
+    <if test="modifor != null"> AND modifor = #{modifor}</if>
+    <if test="modifytime != null"> AND modifytime = #{modifytime}</if>
+        </where>
+    </sql>
+
+    <sql id="basic">
+        <if test="column != null">
+            ORDER BY #{column} #{sort}
+        </if>
+        <if test="pageNo != -1">
+            LIMIT #{startIndex},#{pageSize}
+        </if>
+        <if test="pageNo == -1 and limit != -1">
+            LIMIT #{limit}
+        </if>
+        <if test="lock">
+            <if test="lockMode == 0">
+                FOR UPDATE
+            </if>
+            <if test="lockMode == 1">
+                LOCK IN SHARE MODE
+            </if>
+        </if>
+    </sql>
+</mapper>

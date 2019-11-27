@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.base.dao.TSTypegroupDao">
+	<resultMap id="TSTypegroup" type="com.attiot.railAnaly.base.entity.TSTypegroup">
+		<id property="id" column="ID" javaType="String" jdbcType="VARCHAR"/>
+		<result property="typegroupcode" column="typegroupcode" javaType="String" jdbcType="VARCHAR"/>
+		<result property="typegroupname" column="typegroupname" javaType="String" jdbcType="VARCHAR"/>
+		<result property="createDate" column="create_date" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="createName" column="create_name" javaType="String" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.attiot.railAnaly.base.entity.TSTypegroup">
+		INSERT INTO t_s_typegroup
+		(
+			id,
+			<include refid="column" />
+		) VALUES (
+			#{id,jdbcType=VARCHAR},
+			#{typegroupcode,jdbcType=VARCHAR},
+			#{typegroupname,jdbcType=VARCHAR},
+			#{createDate,jdbcType=TIMESTAMP},
+			#{createName,jdbcType=VARCHAR}
+		)
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT REPLACE(UUID(),'-','')
+		</selectKey>
+	</insert>
+
+	<update id="update" parameterType="com.attiot.railAnaly.base.entity.TSTypegroup">
+		UPDATE t_s_typegroup
+		SET
+			`typegroupcode` = #{typegroupcode},
+			`typegroupname` = #{typegroupname},
+			`create_date` = #{createDate},
+			`create_name` = #{createName}
+		WHERE ID = #{id}
+	</update>
+
+	<delete id="delete" parameterType="String">
+		DELETE FROM t_s_typegroup WHERE ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="String" resultMap="TSTypegroup">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM t_s_typegroup
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+
+	<select id="getByParam" parameterType="com.attiot.railAnaly.base.param.TSTypegroupQueryParam" resultMap="TSTypegroup">
+		SELECT ID,
+		<include refid="column" />
+		FROM t_s_typegroup
+		<include refid="where" />
+		LIMIT 1
+	</select>
+
+	<select id="query" parameterType="com.attiot.railAnaly.base.param.TSTypegroupQueryParam"	resultMap="TSTypegroup">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM t_s_typegroup
+		<include refid="where" />
+	</select>
+
+	<select id="queryCount" parameterType="com.attiot.railAnaly.base.param.TSTypegroupQueryParam" resultType="Long">
+		SELECT COUNT(0)
+		FROM t_s_typegroup
+		<include refid="where" />
+	</select>
+
+	<sql id="column">
+		`typegroupcode`,
+		`typegroupname`,
+		`create_date`,
+		`create_name`
+	</sql>
+
+	<sql id="columnTable">
+		t_s_typegroup.`typegroupcode`,
+		t_s_typegroup.`typegroupname`,
+		DATE_FORMAT(t_s_typegroup.`create_date`,'%Y-%m-%d') as create_date
+		t_s_typegroup.`create_name`
+	</sql>
+
+	<sql id="where">
+		<where>
+			<if test="id != null"> AND ID = #{id}</if>
+			<if test="typegroupcode != null"> AND typegroupcode = #{typegroupcode}</if>
+			<if test="typegroupname != null"> AND typegroupname = #{typegroupname}</if>
+			<if test="createDate != null"> AND create_date = #{createDate}</if>
+			<if test="createName != null"> AND create_name = #{createName}</if>
+		</where>
+	</sql>
+
+	<sql id="basic">
+		<if test="column != null">ORDER BY #{column} #{sort}</if>
+		<if test="pageNo != -1">LIMIT #{startIndex}, #{pageSize}</if>
+		<if test="pageNo == -1 and limit != -1">LIMIT #{limit}</if>
+		<if test="lock">
+			<if test="lockMode == 0">FOR UPDATE</if>
+			<if test="lockMode == 1">LOCK IN SHARE MODE</if>
+		</if>
+	</sql>
+</mapper>

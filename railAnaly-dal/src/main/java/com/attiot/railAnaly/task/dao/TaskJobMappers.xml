@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.task.dao.TaskJobDao">
+	<resultMap id="TaskJob" type="com.attiot.railAnaly.task.entity.TaskJob">
+		<id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="jobname" column="jobname" javaType="String" jdbcType="VARCHAR"/>
+		<result property="taskHours" column="task_hours" javaType="Double" jdbcType="DECIMAL"/>
+		<result property="coeDiff" column="coe_diff" javaType="Double" jdbcType="DECIMAL"/>
+		<result property="coeOvertime" column="coe_overtime" javaType="Double" jdbcType="DECIMAL"/>
+		<result property="coeCooperation" column="coe_cooperation" javaType="Double" jdbcType="DECIMAL"/>
+		<result property="jobType" column="job_type" javaType="String" jdbcType="VARCHAR"/>
+		<result property="contents" column="contents" javaType="String" jdbcType="VARCHAR"/>
+		<result property="mutualContents" column="mutual_contents" javaType="String" jdbcType="LONGVARCHAR"/>
+		<result property="specialContents" column="special_contents" javaType="String" jdbcType="LONGVARCHAR"/>
+
+		<result property="lastGenerate" column="last_generate" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="attachePath" column="attache_path" javaType="String" jdbcType="VARCHAR"/>
+		<result property="creator" column="creator" javaType="String" jdbcType="VARCHAR"/>
+		<result property="createtime" column="createtime" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="modifor" column="modifor" javaType="String" jdbcType="VARCHAR"/>
+		<result property="modifytime" column="modifytime" javaType="Date" jdbcType="TIMESTAMP"/>
+
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.attiot.railAnaly.task.entity.TaskJob">
+		INSERT INTO a_task_job
+		(
+			id,
+			<include refid="column" />
+		) VALUES (
+			#{id,jdbcType=VARCHAR},
+			#{jobname,jdbcType=VARCHAR},
+			#{taskHours,jdbcType=DECIMAL},
+			#{coeDiff,jdbcType=DECIMAL},
+			#{coeOvertime,jdbcType=DECIMAL},
+			#{coeCooperation,jdbcType=DECIMAL},
+			#{jobType,jdbcType=VARCHAR},
+			#{contents,jdbcType=VARCHAR},
+			#{mutualContents},
+			#{specialContents},
+			#{lastGenerate,jdbcType=TIMESTAMP},
+			#{attachePath,jdbcType=VARCHAR},
+			#{creator,jdbcType=VARCHAR},
+			#{createtime,jdbcType=TIMESTAMP},
+			#{modifor,jdbcType=VARCHAR},
+			#{modifytime,jdbcType=TIMESTAMP}
+		)
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT REPLACE(UUID(),'-','')
+		</selectKey>
+	</insert>
+
+	<update id="update" parameterType="com.attiot.railAnaly.task.entity.TaskJob">
+		UPDATE a_task_job
+		SET
+			`jobname` = #{jobname},
+			`task_hours` = #{taskHours},
+			`coe_diff` = #{coeDiff},
+			`coe_overtime` = #{coeOvertime},
+			`coe_cooperation` = #{coeCooperation},
+			`job_type` = #{jobType},
+			`contents` = #{contents},
+			mutual_contents=#{mutualContents},
+			special_contents=#{specialContents},
+			`last_generate` = #{lastGenerate},
+			`attache_path` = #{attachePath},
+			`creator` = #{creator},
+			`createtime` = #{createtime},
+			`modifor` = #{modifor},
+			`modifytime` = #{modifytime}
+		WHERE ID = #{id}
+	</update>
+
+	<delete id="delete" parameterType="String">
+		DELETE FROM a_task_job WHERE ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="String" resultMap="TaskJob">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM a_task_job
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+
+	<select id="getByParam" parameterType="com.attiot.railAnaly.task.param.TaskJobQueryParam" resultMap="TaskJob">
+		SELECT ID,
+		<include refid="column" />
+		FROM a_task_job
+		<include refid="where" />
+		LIMIT 1
+	</select>
+
+	<select id="query" parameterType="com.attiot.railAnaly.task.param.TaskJobQueryParam"	resultMap="TaskJob">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM a_task_job
+		<include refid="where" />
+		<include refid="basic" />
+	</select>
+
+	<select id="queryCount" parameterType="com.attiot.railAnaly.task.param.TaskJobQueryParam" resultType="Long">
+		SELECT COUNT(0)
+		FROM a_task_job
+		<include refid="where" />
+	</select>
+
+	<sql id="column">
+		`jobname`,
+		`task_hours`,
+		`coe_diff`,
+		`coe_overtime`,
+		`coe_cooperation`,
+		`job_type`,
+		`contents`,
+		mutual_contents,
+		special_contents,
+		`last_generate`,
+		`attache_path`,
+		`creator`,
+		`createtime`,
+		`modifor`,
+		`modifytime`
+	</sql>
+
+	<sql id="columnTable">
+		a_task_job.`jobname`,
+		a_task_job.`task_hours`,
+		a_task_job.`coe_diff`,
+		a_task_job.`coe_overtime`,
+		a_task_job.`coe_cooperation`,
+		a_task_job.`job_type`,
+		a_task_job.`contents`,
+		a_task_job.`last_generate`,
+		a_task_job.`attache_path`,
+		a_task_job.`creator`,
+		a_task_job.`createtime`,
+		a_task_job.`modifor`,
+		a_task_job.`modifytime`
+	</sql>
+
+	<sql id="where">
+		<where>
+			<if test="id != null"> AND id = #{id}</if>
+			<if test="jobname != null"> AND jobname = #{jobname}</if>
+			<if test="taskHours != null"> AND task_hours = #{taskHours}</if>
+			<if test="coeDiff != null"> AND coe_diff = #{coeDiff}</if>
+			<if test="coeOvertime != null"> AND coe_overtime = #{coeOvertime}</if>
+			<if test="coeCooperation != null"> AND coe_cooperation = #{coeCooperation}</if>
+			<if test="jobType != null"> AND job_type = #{jobType}</if>
+			<if test="contents != null"> AND contents = #{contents}</if>
+			<if test="lastGenerate != null"> AND last_generate = #{lastGenerate}</if>
+			<if test="attachePath != null"> AND attache_path = #{attachePath}</if>
+			<if test="creator != null"> AND creator = #{creator}</if>
+			<if test="createtime != null"> AND createtime = #{createtime}</if>
+			<if test="modifor != null"> AND modifor = #{modifor}</if>
+			<if test="modifytime != null"> AND modifytime = #{modifytime}</if>
+		</where>
+	</sql>
+
+	<sql id="basic">
+		<if test="column != null">ORDER BY #{column} #{sort}</if>
+		<if test="pageNo != -1">LIMIT #{startIndex}, #{pageSize}</if>
+		<if test="pageNo == -1 and limit != -1">LIMIT #{limit}</if>
+		<if test="lock">
+			<if test="lockMode == 0">FOR UPDATE</if>
+			<if test="lockMode == 1">LOCK IN SHARE MODE</if>
+		</if>
+	</sql>
+</mapper>

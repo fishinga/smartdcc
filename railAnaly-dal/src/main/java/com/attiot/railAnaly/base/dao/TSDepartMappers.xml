@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.base.dao.TSDepartDao">
+	<resultMap id="TSDepart" type="com.attiot.railAnaly.base.entity.TSDepart">
+		<id property="id" column="ID" javaType="String" jdbcType="VARCHAR"/>
+		<result property="departname" column="departname" javaType="String" jdbcType="VARCHAR"/>
+		<result property="description" column="description" javaType="String" jdbcType="VARCHAR"/>
+		<result property="parentdepartid" column="parentdepartid" javaType="String" jdbcType="VARCHAR"/>
+		<result property="orgCode" column="org_code" javaType="String" jdbcType="VARCHAR"/>
+		<result property="orgType" column="org_type" javaType="String" jdbcType="VARCHAR"/>
+		<result property="mobile" column="mobile" javaType="String" jdbcType="VARCHAR"/>
+		<result property="fax" column="fax" javaType="String" jdbcType="VARCHAR"/>
+		<result property="address" column="address" javaType="String" jdbcType="VARCHAR"/>
+		<result property="departOrder" column="depart_order" javaType="String" jdbcType="VARCHAR"/>
+		<result property="departType" column="depart_type" javaType="Integer" jdbcType="SMALLINT"/>
+	</resultMap>
+
+	<select id="getById" parameterType="String" resultMap="TSDepart">
+		SELECT
+		ID,
+		<include refid="column" />
+		FROM t_s_depart
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+
+
+	<select id="getDepartListByUserId" parameterType="String" resultMap="TSDepart">
+		SELECT
+		ID,
+		<include refid="column" />
+		FROM t_s_depart
+		<where>
+			id in(select org_id from t_s_user_org where user_id=#{userId})
+		</where>
+	</select>
+	<select id="getByIds" parameterType="String" resultMap="TSDepart">
+		SELECT
+		ID,
+		<include refid="column" />
+		FROM t_s_depart
+		<where>
+			find_in_set(ID ,#{ids})>0
+		</where>
+	</select>
+
+
+
+
+	<select id="query" parameterType="com.attiot.railAnaly.base.param.TSDepartQueryParam"	resultMap="TSDepart">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM t_s_depart
+		<include refid="where" />
+	</select>
+
+	<select id="queryCount" parameterType="com.attiot.railAnaly.base.param.TSDepartQueryParam" resultType="Long">
+		SELECT COUNT(0)
+		FROM t_s_depart
+		<include refid="where" />
+	</select>
+
+	<select id="byManager" parameterType="String" resultType="String">
+		SELECT id
+		FROM t_s_depart
+		WHERE
+		<if test="manager != null and manager != '' "> manager = #{manager}</if>
+	</select>
+
+
+	<select id="getWorkUserList" parameterType="String" resultType="Map">
+		SELECT
+			bu.id id,
+			bu.username userName,
+			bu.realname realName
+		FROM
+			t_s_depart d
+		INNER JOIN t_s_user_org uo ON d.id = uo.org_id
+		INNER JOIN t_s_base_user bu ON uo.user_id = bu.ID
+	  	<where>
+			bu.`status` = '1' and bu.delete_flag = '0' and d.ID = #{departId}
+		</where>
+	</select>
+
+	<sql id="column">
+		`departname`,
+		`description`,
+		`parentdepartid`,
+		`org_code`,
+		`org_type`,
+		`mobile`,
+		`fax`,
+		`address`,
+		`depart_order`,
+		`depart_type`
+	</sql>
+
+	<sql id="columnTable">
+		t_s_depart.`departname`,
+		t_s_depart.`description`,
+		t_s_depart.`parentdepartid`,
+		t_s_depart.`org_code`,
+		t_s_depart.`org_type`,
+		t_s_depart.`mobile`,
+		t_s_depart.`fax`,
+		t_s_depart.`address`,
+		t_s_depart.`depart_order`,
+		t_s_depart.`depart_type`
+	</sql>
+
+	<sql id="where">
+		<where>
+			<if test="id != null"> AND ID = #{id}</if>
+			<if test="departname != null"> AND departname = #{departname}</if>
+			<if test="description != null"> AND description = #{description}</if>
+			<if test="parentdepartid != null"> AND parentdepartid = #{parentdepartid}</if>
+			<if test="orgCode != null"> AND org_code = #{orgCode}</if>
+			<if test="orgType != null"> AND org_type = #{orgType}</if>
+			<if test="mobile != null"> AND mobile = #{mobile}</if>
+			<if test="fax != null"> AND fax = #{fax}</if>
+			<if test="address != null"> AND address = #{address}</if>
+			<if test="departOrder != null"> AND depart_order = #{departOrder}</if>
+			<if test="departType != null"> AND depart_type = #{departType}</if>
+		</where>
+	</sql>
+
+	<sql id="basic">
+		<if test="column != null">ORDER BY #{column} #{sort}</if>
+		<if test="pageNo != -1">LIMIT #{startIndex}, #{pageSize}</if>
+		<if test="pageNo == -1 and limit != -1">LIMIT #{limit}</if>
+		<if test="lock">
+			<if test="lockMode == 0">FOR UPDATE</if>
+			<if test="lockMode == 1">LOCK IN SHARE MODE</if>
+		</if>
+	</sql>
+</mapper>

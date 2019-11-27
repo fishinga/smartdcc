@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.workflow.dao.AWorkflowDataDao">
+    <resultMap id="AWorkflowData" type="com.attiot.railAnaly.workflow.entity.AWorkflowData">
+        <id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="wbNo" column="wb_no" javaType="String" jdbcType="VARCHAR"/>
+        <result property="sort" column="sort" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="sourceId" column="source_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="processId" column="process_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="processCode" column="process_code" javaType="String" jdbcType="VARCHAR"/>
+        <result property="processName" column="process_name" javaType="String" jdbcType="VARCHAR"/>
+        <result property="nodeId" column="node_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="nodeCode" column="node_code" javaType="String" jdbcType="VARCHAR"/>
+        <result property="formId" column="form_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="formUrl" column="form_url" javaType="String" jdbcType="VARCHAR"/>
+        <result property="nodeName" column="node_name" javaType="String" jdbcType="VARCHAR"/>
+        <result property="nodeType" column="node_type" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="assignType" column="assign_type" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="assginIds" column="assgin_ids" javaType="String" jdbcType="VARCHAR"/>
+        <result property="auditors" column="auditors" javaType="String" jdbcType="VARCHAR"/>
+        <result property="actualAuditors" column="actual_auditors" javaType="String" jdbcType="VARCHAR"/>
+        <result property="auditMode" column="audit_mode" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="dataAuth" column="data_auth" javaType="String" jdbcType="LONGVARCHAR"/>
+        <result property="dataValue" column="data_value" javaType="String" jdbcType="LONGVARCHAR"/>
+        <result property="configType" column="config_type" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="passNodeId" column="pass_node_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="passExpress" column="pass_express" javaType="String" jdbcType="LONGVARCHAR"/>
+        <result property="notpassNodeId" column="notpass_node_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="notpassExpress" column="notpass_express" javaType="String" jdbcType="LONGVARCHAR"/>
+        <result property="runState" column="run_state" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="auditState" column="audit_state" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="auditResults" column="audit_results" javaType="String" jdbcType="VARCHAR"/>
+        <result property="creator" column="creator" javaType="String" jdbcType="VARCHAR"/>
+        <result property="createtime" column="createtime" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="modifor" column="modifor" javaType="String" jdbcType="VARCHAR"/>
+        <result property="modifytime" column="modifytime" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="autoRunAfterHour" column="auto_run_after_hour" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="autoRun" column="auto_run" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="jobContent" column="job_content" javaType="String" jdbcType="VARCHAR"/>
+        <result property="departId" column="depart_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="trainNo" column="train_no" javaType="String" jdbcType="VARCHAR"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.attiot.railAnaly.workflow.entity.AWorkflowData">
+        INSERT INTO a_workflow_data
+        (
+        id,submit_client,
+        <include refid="column"/>)
+        VALUES (
+        #{id,jdbcType=VARCHAR},
+        'app',
+        #{wbNo,jdbcType=VARCHAR},
+        #{sort,jdbcType=INTEGER},
+        #{sourceId,jdbcType=VARCHAR},
+        #{processId,jdbcType=VARCHAR},
+        #{processCode,jdbcType=VARCHAR},
+        #{processName,jdbcType=VARCHAR},
+        #{nodeId,jdbcType=VARCHAR},
+        #{nodeCode,jdbcType=VARCHAR},
+        #{formId,jdbcType=VARCHAR},
+        #{formUrl,jdbcType=VARCHAR},
+        #{nodeName,jdbcType=VARCHAR},
+        #{nodeType,jdbcType=INTEGER},
+        #{assignType,jdbcType=INTEGER},
+        #{assginIds,jdbcType=VARCHAR},
+        #{auditors,jdbcType=VARCHAR},
+        #{actualAuditors,jdbcType=VARCHAR},
+        #{auditMode,jdbcType=INTEGER},
+        #{dataAuth,jdbcType=LONGVARCHAR},
+        #{dataValue,jdbcType=LONGVARCHAR},
+        #{configType,jdbcType=INTEGER},
+        #{passNodeId,jdbcType=VARCHAR},
+        #{passExpress,jdbcType=LONGVARCHAR},
+        #{notpassNodeId,jdbcType=VARCHAR},
+        #{notpassExpress,jdbcType=LONGVARCHAR},
+        #{runState,jdbcType=INTEGER},
+        #{auditState,jdbcType=INTEGER},
+        #{auditResults,jdbcType=VARCHAR},
+        #{creator,jdbcType=VARCHAR},
+        #{createtime,jdbcType=TIMESTAMP},
+        #{modifor,jdbcType=VARCHAR},
+        #{modifytime,jdbcType=TIMESTAMP},
+        #{autoRunAfterHour,jdbcType=INTEGER},
+        #{autoRun,jdbcType=INTEGER},
+        #{jobContent},
+        #{departId},
+        #{trainNo}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.attiot.railAnaly.workflow.entity.AWorkflowData">
+        UPDATE a_workflow_data
+        SET
+        `wb_no` = #{wbNo},
+        `sort` = #{sort},
+        `source_id` = #{sourceId},
+        `process_id` = #{processId},
+        `process_name` = #{processName},
+        `node_id` = #{nodeId},
+        `node_code` = #{nodeCode},
+        `form_id` = #{formId},
+        `form_url` = #{formUrl},
+        `node_name` = #{nodeName},
+        `node_type` = #{nodeType},
+        `assign_type` = #{assignType},
+        `assgin_ids` = #{assginIds},
+        `auditors` = #{auditors},
+        `actual_auditors` = #{actualAuditors},
+        `audit_mode` = #{auditMode},
+        `data_auth` = #{dataAuth},
+        `data_value` = #{dataValue},
+        `config_type` = #{configType},
+        `pass_node_id` = #{passNodeId},
+        `pass_express` = #{passExpress},
+        `notpass_node_id` = #{notpassNodeId},
+        `notpass_express` = #{notpassExpress},
+        `run_state` = #{runState},
+        `audit_state` = #{auditState},
+        `audit_results` = #{auditResults},
+        `creator` = #{creator},
+        `createtime` = #{createtime},
+        `modifor` = #{modifor},
+        `modifytime` = #{modifytime},
+        `auto_run_after_hour` = #{autoRunAfterHour},
+        `auto_run` = #{autoRun},
+        job_content=#{jobContent},
+        depart_id=#{departId},
+        train_no=#{trainNo},
+        submit_client = 'app'
+        WHERE ID = #{id}
+    </update>
+
+    <!-- 批量插入  begin -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO a_workflow_data
+        (id,submit_client,<include refid="column"/>)
+        values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (
+            #{item.id},
+            'app',
+            #{item.wbNo},
+            #{item.sort},
+            #{item.sourceId,jdbcType=VARCHAR},
+            #{item.processId,jdbcType=VARCHAR},
+            #{item.processCode,jdbcType=VARCHAR},
+            #{item.processName,jdbcType=VARCHAR},
+            #{item.nodeId,jdbcType=VARCHAR},
+            #{item.nodeCode},
+            #{item.formId,jdbcType=VARCHAR},
+            #{item.formUrl,jdbcType=VARCHAR},
+            #{item.nodeName,jdbcType=VARCHAR},
+            #{item.nodeType,jdbcType=INTEGER},
+            #{item.assignType,jdbcType=INTEGER},
+            #{item.assginIds,jdbcType=VARCHAR},
+            #{item.auditors,jdbcType=VARCHAR},
+            #{item.actualAuditors,jdbcType=VARCHAR},
+            #{item.auditMode,jdbcType=VARCHAR},
+            #{item.dataAuth,jdbcType=LONGVARCHAR},
+            #{item.dataValue},
+            #{item.configType,jdbcType=INTEGER},
+            #{item.passNodeId},
+            #{item.passExpress},
+            #{item.notpassNodeId},
+            #{item.notpassExpress},
+            #{item.runState,jdbcType=INTEGER},
+            #{item.auditState},
+            #{item.auditResults,jdbcType=VARCHAR},
+            #{item.creator,jdbcType=VARCHAR},
+            #{item.createtime,jdbcType=TIMESTAMP},
+            #{item.modifor,jdbcType=VARCHAR},
+            #{item.modifytime,jdbcType=TIMESTAMP},
+            #{item.autoRunAfterHour,jdbcType=INTEGER},
+            #{item.autoRun,jdbcType=INTEGER},
+            #{item.jobContent},
+            #{item.departId},
+            #{item.trainNo}
+            )
+        </foreach>
+    </insert>
+    <!-- 批量插入 end -->
+
+    <select id="query" parameterType="com.attiot.railAnaly.workflow.param.AWorkflowDataQueryParam" resultMap="AWorkflowData">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_workflow_data
+        <include refid="where"/>
+        <include refid="basic"/>
+    </select>
+
+    <select id="getStartWorkflowById" parameterType="String" resultMap="AWorkflowData">
+        select a.* from a_workflow_data a,a_workflow_data b
+        where b.id=#{workflowId} and a.node_type=1 and a.process_id=b.process_id
+    </select>
+
+    <select id="getStartWorkflow"  resultMap="AWorkflowData">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_workflow_data
+        where source_id=#{sourceId}
+        and wb_no=#{wbNo}
+        and node_type=1
+    </select>
+
+    <select id="getAllWorkflowListByWorkflowId" parameterType="String" resultMap="AWorkflowData">
+        SELECT DISTINCT
+        a.id
+        ,a.process_code
+        ,a.source_id
+        , a.node_code
+        , a.node_name
+        , a.creator
+        , a.createtime
+        , a.modifor
+        , a.modifytime
+        , a.run_state
+        , a.audit_state
+        , a.audit_results
+        , a.auditors
+        , a.node_type
+        ,a.data_value
+        FROM
+        a_workflow_data a, a_workflow_data b
+        WHERE
+        a.source_id = b.source_id
+        AND a.wb_no = b.wb_no
+        AND b.id = #{workflowId}
+        ORDER BY
+        a.sort
+    </select>
+    <select id="getWorkflowListBySourceIdAndWbNo" parameterType="Map" resultMap="AWorkflowData">
+        SELECT a.*
+        FROM
+        a_workflow_data a
+        WHERE
+        a.source_id = #{sourceId}
+        AND a.wb_no = #{wbNo}
+        ORDER BY
+        a.sort
+    </select>
+
+    <select id="getByParam" parameterType="com.attiot.railAnaly.workflow.param.AWorkflowDataQueryParam" resultMap="AWorkflowData">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_workflow_data
+        <include refid="where"/>
+        LIMIT 1
+    </select>
+
+
+    <select id="getById" parameterType="String"  resultMap="AWorkflowData">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_workflow_data
+        <where>
+            ID = #{id}
+        </where>
+    </select>
+
+    <select id="queryCount" parameterType="com.attiot.railAnaly.workflow.param.AWorkflowDataQueryParam" resultType="Long">
+        SELECT COUNT(0)
+        FROM a_workflow_data
+        <include refid="where"/>
+    </select>
+
+    <select id="getWaitToDoCountByUserId" parameterType="String" resultType="Long">
+        SELECT COUNT(0)
+        FROM a_workflow_data
+        where run_state=1 and find_in_set(#{userId},auditors)>0
+    </select>
+
+
+
+    <!--  根据用户查询相对应的流程  begin -->
+    <select id="getBacklog"  resultType="map">
+        SELECT
+            w.id,
+            w.process_name,
+            w.process_code,
+            w.node_code,
+            w.node_type,
+            w.node_name,
+            w.run_state,
+            w.wb_no,
+            w.auditors,
+            w.audit_state,
+            w.audit_results,
+            DATE_FORMAT(w.createtime,'%Y-%m-%d %H:%i') as createtime,
+            w.creator,
+            (select bu.realname from t_s_base_user bu where bu.id = w.creator) as creatorName,
+            w.modifor,
+            (select bu.realname from t_s_base_user bu where bu.id = w.modifor) as realname,
+            DATE_FORMAT(w.modifytime,'%Y-%m-%d %H:%i') as modifytime,
+            w.node_type,
+            CASE WHEN LEFT (w.process_code, 1) = 1 THEN
+                (
+                    SELECT
+                        p.job_content
+                    FROM
+                        a_point_please p
+                    WHERE
+                        p.id = w.source_id
+                )
+            WHEN LEFT (w.process_code, 1) = 2 THEN
+                (select  bl.job_content  from a_borrow_list bl where bl.id = w.source_id)
+            WHEN LEFT (w.process_code, 1) = 3 THEN
+	            ( SELECT DISTINCT tl.remarks FROM a_task_list tl WHERE FIND_IN_SET(tl.id, w.source_id) > 0 )
+	            WHEN LEFT (w.process_code, 1) = 4 THEN
+	            ( SELECT DISTINCT tl.job_content FROM a_point_please_forgein tl WHERE FIND_IN_SET(tl.id, w.source_id) > 0 )
+            END AS processContent,
+            CASE WHEN LEFT (w.process_code, 3) = 101 THEN
+						 (select a.car_num  from a_point_please_boarding a,a_point_please b where a.point_please_id=b.id and a.point_please_id=w.source_id)
+						 WHEN LEFT (w.process_code, 3) = 103 THEN
+							(select a.train_num from a_point_please_cart a,a_point_please b where a.point_please_id=b.id and a.point_please_id=w.source_id)
+						 end as trainNo
+        FROM
+        a_workflow_data w
+        WHERE
+        (
+            FIND_IN_SET(#{userid},auditors) > 0
+            AND w.node_type = 2
+            AND w.run_state = 1
+        )
+        OR
+        (
+            FIND_IN_SET(#{userid},creator) > 0
+            AND w.node_type in (1,3)
+            AND w.run_state = 0
+        )
+         AND DATE_SUB(CURDATE(), INTERVAL 10  DAY) &lt;= date(createtime) 
+       ORDER  by w.createtime desc
+    </select>
+    <!--  根据用户查询相对应的流程 end -->
+    
+    
+    
+    
+    <!--  根据用户查询相对应的流程new  begin -->
+    <select id="getBacklogNew"  resultType="map">
+    select *
+    from (
+		SELECT
+            w.id,
+            w.source_id,
+            w.process_name,
+            w.process_code,
+            w.node_code,
+            w.node_type,
+            w.node_name,
+            w.run_state,
+            w.wb_no,
+            w.auditors,
+            w.audit_state,
+            w.audit_results,
+            DATE_FORMAT(w.createtime,'%Y-%m-%d %H:%i') as createtime,
+            w.creator,
+            (select bu.realname from t_s_base_user bu where bu.id = w.creator) as creatorName,
+            w.modifor,
+            (select bu.realname from t_s_base_user bu where bu.id = w.modifor) as realname,
+            DATE_FORMAT(w.modifytime,'%Y-%m-%d %H:%i') as modifytime,
+            CASE WHEN LEFT (w.process_code, 1) = 1 THEN
+                (
+                    SELECT
+                        p.job_content
+                    FROM
+                        a_point_please p
+                    WHERE
+                        p.id = w.source_id
+                )
+            WHEN LEFT (w.process_code, 1) = 2 THEN
+                (select  bl.job_content  from a_borrow_list bl where bl.id = w.source_id limit 1)
+            WHEN LEFT (w.process_code, 1) = 3 THEN
+	            ( SELECT DISTINCT tl.remarks FROM a_task_list tl WHERE FIND_IN_SET(tl.id, w.source_id) > 0 limit 1 )
+	            WHEN LEFT (w.process_code, 1) = 4 THEN
+	            ( SELECT DISTINCT tl.job_content FROM a_point_please_forgein tl WHERE FIND_IN_SET(tl.id, w.source_id) > 0 limit 1 )
+	            WHEN LEFT ( w.process_code, 4 ) = 5010 THEN
+				(SELECT tl.fault_contents FROM a_fault_info tl WHERE tl.id = w.source_id  limit 1 )
+				WHEN (LEFT ( w.process_code, 4 ) = 5011 or LEFT ( w.process_code, 4 ) = 5012 or LEFT ( w.process_code, 4 ) = 5013 ) THEN
+				(SELECT tl.task_name FROM a_fault_list tl WHERE tl.id = w.source_id limit 1 )
+            END AS processContent,
+            CASE WHEN LEFT (w.process_code, 3) = 101 THEN
+						 (select a.car_num  from a_point_please_boarding a,a_point_please b where a.point_please_id=b.id and a.point_please_id=w.source_id limit 1)
+						 WHEN LEFT (w.process_code, 3) = 103 THEN
+							(select a.train_num from a_point_please_cart a,a_point_please b where a.point_please_id=b.id and a.point_please_id=w.source_id limit 1)
+							WHEN LEFT ( w.process_code, 1 ) = 3 THEN
+				( SELECT DISTINCT a.train_no FROM (select train_no,id from a_task_list tl
+				union all SELECT tl.train_no,id FROM a_task_list_his tl) a WHERE FIND_IN_SET( a.id, w.source_id ) > 0  limit 1)
+							WHEN LEFT ( w.process_code, 4 ) = 5010 THEN
+				(SELECT tl.train_no FROM a_fault_info tl WHERE tl.id = w.source_id  limit 1 )
+				WHEN (LEFT ( w.process_code, 4 ) = 5011 or LEFT ( w.process_code, 4 ) = 5012 or LEFT ( w.process_code, 4 ) = 5013 ) THEN
+				(SELECT tl.train_no FROM a_fault_list tl WHERE tl.id = w.source_id limit 1 )
+						 end as trainNo
+        FROM
+        a_workflow_data w
+        WHERE
+        (
+            FIND_IN_SET(#{userid},auditors) > 0
+            AND w.node_type = 2
+            AND w.run_state = 1
+        )
+        union
+		(SELECT
+            w.id,
+            w.source_id,
+            w.process_name,
+            w.process_code,
+            w.node_code,
+            w.node_type,
+            w.node_name,
+            w.run_state,
+            w.wb_no,
+            w.auditors,
+            w.audit_state,
+            w.audit_results,
+            DATE_FORMAT(w.createtime,'%Y-%m-%d %H:%i') as createtime,
+            w.creator,
+            (select bu.realname from t_s_base_user bu where bu.id = w.creator) as creatorName,
+            w.modifor,
+            (select bu.realname from t_s_base_user bu where bu.id = w.modifor) as realname,
+            DATE_FORMAT(w.modifytime,'%Y-%m-%d %H:%i') as modifytime,
+            CASE WHEN LEFT (w.process_code, 1) = 1 THEN
+                (
+                    SELECT
+                        p.job_content
+                    FROM
+                        a_point_please p
+                    WHERE
+                        p.id = w.source_id
+                )
+            WHEN LEFT (w.process_code, 1) = 2 THEN
+                (select  bl.job_content  from a_borrow_list bl where bl.id = w.source_id limit 1)
+            WHEN LEFT (w.process_code, 1) = 3 THEN
+	            ( SELECT DISTINCT tl.remarks FROM a_task_list tl WHERE FIND_IN_SET(tl.id, w.source_id) > 0  limit 1)
+	            WHEN LEFT (w.process_code, 1) = 4 THEN
+	            ( SELECT DISTINCT tl.job_content FROM a_point_please_forgein tl WHERE FIND_IN_SET(tl.id, w.source_id) > 0  limit 1)
+	            WHEN LEFT ( w.process_code, 4 ) = 5010 THEN
+				(SELECT tl.fault_contents FROM a_fault_info tl WHERE tl.id = w.source_id  limit 1 )
+				WHEN (LEFT ( w.process_code, 4 ) = 5011 or LEFT ( w.process_code, 4 ) = 5012 or LEFT ( w.process_code, 4 ) = 5013 ) THEN
+				(SELECT tl.task_name FROM a_fault_list tl WHERE tl.id = w.source_id limit 1 )
+            END AS processContent,
+            CASE WHEN LEFT (w.process_code, 3) = 101 THEN
+						 (select a.car_num  from a_point_please_boarding a,a_point_please b where a.point_please_id=b.id and a.point_please_id=w.source_id limit 1)
+						 WHEN LEFT (w.process_code, 3) = 103 THEN
+							(select a.train_num from a_point_please_cart a,a_point_please b where a.point_please_id=b.id and a.point_please_id=w.source_id limit 1)
+							WHEN LEFT ( w.process_code, 1 ) = 3 THEN
+				( SELECT DISTINCT a.train_no FROM (select train_no,id from a_task_list tl
+				union all SELECT tl.train_no,id FROM a_task_list_his tl) a WHERE FIND_IN_SET( a.id, w.source_id ) > 0  limit 1)
+							WHEN LEFT ( w.process_code, 4 ) = 5010 THEN
+				(SELECT tl.train_no FROM a_fault_info tl WHERE tl.id = w.source_id  limit 1 )
+				WHEN (LEFT ( w.process_code, 4 ) = 5011 or LEFT ( w.process_code, 4 ) = 5012 or LEFT ( w.process_code, 4 ) = 5013 ) THEN
+				(SELECT tl.train_no FROM a_fault_list tl WHERE tl.id = w.source_id  limit 1)
+						 end as trainNo
+        FROM
+        a_workflow_data w
+        WHERE
+        (
+            FIND_IN_SET(#{userid},creator) > 0
+            AND w.node_type in (1,3)
+            AND w.run_state = 0
+        )
+      )
+    ) temp where DATE_SUB(CURDATE(), INTERVAL 10  DAY) &lt;= date(createtime) 
+    	order by createtime desc 
+      
+    </select>
+    <!--  根据用户查询相对应的流程new end -->
+    
+
+    <!--  根据来源ID，查询流程记录  begin -->
+    <select id="getBlockLogNode"  resultType="map">
+        SELECT
+        w.id,
+        w.process_name,
+        w.process_code,
+        w.node_code,
+        w.node_name,
+        w.run_state,
+        w.auditors,
+        w.audit_state,
+        w.audit_results,
+        w.data_value,
+        date_format(w.createtime, '%Y-%m-%d %H:%i:%s')as  createtime,
+        w.creator,
+        w.modifor,
+        DATE_FORMAT(w.modifytime,'%Y-%m-%d %H:%i') as modifytime,
+        (ifnull((select u.realname from t_s_base_user u where u.id = w.modifor),w.modifor )) as realname
+        FROM
+        a_workflow_data w
+        WHERE
+        source_id = #{sourceId}
+        and wb_no = #{wbNo}
+
+    </select>
+    <!--  根据来源ID，查询流程记录  and run_state = 0  end  -->
+
+
+    <select id="getBorrowListByWorkflowId" parameterType="String" resultType="Map">
+        SELECT bl.* FROM `a_workflow_data` wd  INNER JOIN a_borrow_list bl on wd.source_id = bl.ppoint_id
+        WHERE wd.id = #{workflowId}
+        ORDER BY bl.createtime desc
+    </select>
+
+
+    <delete id="delete" parameterType="Integer">
+        DELETE FROM a_workflow_data WHERE ID = #{id}
+    </delete>
+
+    <sql id="column">
+        `wb_no`,
+        `sort`,
+        `source_id`,
+        `process_id`,
+        `process_code`,
+        `process_name`,
+        `node_id`,
+        `node_code`,
+        `form_id`,
+        `form_url`,
+        `node_name`,
+        `node_type`,
+        `assign_type`,
+        `assgin_ids`,
+        `auditors`,
+        `actual_auditors`,
+        `audit_mode`,
+        `data_auth`,
+        `data_value`,
+        `config_type`,
+        `pass_node_id`,
+        `pass_express`,
+        `notpass_node_id`,
+        `notpass_express`,
+        `run_state`,
+        `audit_state`,
+        `audit_results`,
+        `creator`,
+        `createtime`,
+        `modifor`,
+        `modifytime`,
+        `auto_run_after_hour`,
+        `auto_run`,
+        job_content,
+        depart_id,
+        train_no
+    </sql>
+
+    <sql id="columnTable">
+        a_workflow_data.`wb_no`,
+        a_workflow_data.`sort`,
+        a_workflow_data.`source_id`,
+        a_workflow_data.`process_id`,
+        a_workflow_data.`process_name`,
+        a_workflow_data.`node_id`,
+        a_workflow_data.`node_code`,
+        a_workflow_data.`form_id`,
+        a_workflow_data.`form_url`,
+        a_workflow_data.`node_name`,
+        a_workflow_data.`node_type`,
+        a_workflow_data.`assign_type`,
+        a_workflow_data.`assgin_ids`,
+        a_workflow_data.`auditors`,
+        a_workflow_data.`actual_auditors`,
+        a_workflow_data.`audit_mode`,
+        a_workflow_data.`data_auth`,
+        a_workflow_data.`data_value`,
+        a_workflow_data.`config_type`,
+        a_workflow_data.`pass_node_id`,
+        a_workflow_data.`pass_express`,
+        a_workflow_data.`notpass_node_id`,
+        a_workflow_data.`notpass_express`,
+        a_workflow_data.`run_state`,
+        a_workflow_data.`audit_state`,
+        a_workflow_data.`audit_results`,
+        a_workflow_data.`creator`,
+        a_workflow_data.`createtime`,
+        a_workflow_data.`modifor`,
+        a_workflow_data.`modifytime`,
+        a_workflow_data.`auto_run_after_hour`,
+        a_workflow_data.`auto_run`
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id != String"> AND id = #{id}</if>
+            <if test="wbNo != String"> AND wb_no = #{wbNo}</if>
+            <if test="sort != String"> AND sort = #{sort}</if>
+            <if test="sourceId != String"> AND source_id = #{sourceId}</if>
+            <if test="processId != String"> AND process_id = #{processId}</if>
+            <if test="processName != String"> AND process_name = #{processName}</if>
+            <if test="nodeId != String"> AND node_id = #{nodeId}</if>
+            <if test="nodeCode != String"> AND node_code = #{nodeCode}</if>
+            <if test="formId != String"> AND form_id = #{formId}</if>
+            <if test="formUrl != String"> AND form_url = #{formUrl}</if>
+            <if test="nodeName != String"> AND node_name = #{nodeName}</if>
+            <if test="nodeType != String"> AND node_type = #{nodeType}</if>
+            <if test="assignType != String"> AND assign_type = #{assignType}</if>
+            <if test="assginIds != String"> AND assgin_ids = #{assginIds}</if>
+            <if test="auditors != String"> AND auditors = #{auditors}</if>
+            <if test="actualAuditors != String"> AND actual_auditors = #{actualAuditors}</if>
+            <if test="auditMode != String"> AND audit_mode = #{auditMode}</if>
+            <if test="dataAuth != String"> AND data_auth = #{dataAuth}</if>
+            <if test="dataValue != String"> AND data_value = #{dataValue}</if>
+            <if test="configType != String"> AND config_type = #{configType}</if>
+            <if test="passNodeId != String"> AND pass_node_id = #{passNodeId}</if>
+            <if test="passExpress != String"> AND pass_express = #{passExpress}</if>
+            <if test="notpassNodeId != String"> AND notpass_node_id = #{notpassNodeId}</if>
+            <if test="notpassExpress != String"> AND notpass_express = #{notpassExpress}</if>
+            <if test="runState != String"> AND run_state = #{runState}</if>
+            <if test="auditState != String"> AND audit_state = #{auditState}</if>
+            <if test="auditResults != String"> AND audit_results = #{auditResults}</if>
+            <if test="creator != String"> AND creator = #{creator}</if>
+            <if test="createtime != String"> AND createtime = #{createtime}</if>
+            <if test="modifor != String"> AND modifor = #{modifor}</if>
+            <if test="modifytime != String"> AND modifytime = #{modifytime}</if>
+            <if test="autoRunAfterHour != String"> AND auto_run_after_hour = #{autoRunAfterHour}</if>
+            <if test="autoRun != String"> AND auto_run = #{autoRun}</if>
+        </where>
+    </sql>
+
+    <sql id="basic">
+        <if test="column != String">
+            ORDER BY #{column} #{sort}
+        </if>
+        <if test="pageNo != -1">
+            LIMIT #{startIndex},#{pageSize}
+        </if>
+        <if test="pageNo == -1 and limit != -1">
+            LIMIT #{limit}
+        </if>
+        <if test="lock">
+            <if test="lockMode == 0">
+                FOR UPDATE
+            </if>
+            <if test="lockMode == 1">
+                LOCK IN SHARE MODE
+            </if>
+        </if>
+    </sql>
+</mapper>

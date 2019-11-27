@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.metro.dao.APerformanceStatYearscoreDao">
+    <resultMap id="APerformanceStatYearscore" type="com.attiot.railAnaly.metro.entity.APerformanceStatYearscore">
+        <id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="year" column="year" javaType="String" jdbcType="VARCHAR"/>
+        <result property="departId" column="depart_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="departType" column="depart_type" javaType="String" jdbcType="VARCHAR"/>
+        <result property="userid" column="userid" javaType="String" jdbcType="VARCHAR"/>
+        <result property="month1" column="month_1" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="month2" column="month_2" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="month3" column="month_3" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="month4" column="month_4" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="month5" column="month_5" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="month6" column="month_6" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="month7" column="month_7" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="month8" column="month_8" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="month9" column="month_9" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="month10" column="month_10" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="month11" column="month_11" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="month12" column="month_12" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="quarter1" column="quarter_1" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="quarter2" column="quarter_2" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="quarter3" column="quarter_3" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="quarter4" column="quarter_4" javaType="Double" jdbcType="DECIMAL"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.attiot.railAnaly.metro.entity.APerformanceStatYearscore">
+        INSERT INTO a_performance_stat_yearscore
+        (id,<include refid="column"/>)
+        VALUES (
+        md5(uuid()),
+        #{year,jdbcType=VARCHAR},
+    #{departId,jdbcType=VARCHAR},
+    #{departType,jdbcType=VARCHAR},
+        #{userid,jdbcType=VARCHAR},
+    #{month1,jdbcType=DECIMAL},
+    #{month2,jdbcType=DECIMAL},
+    #{month3,jdbcType=DECIMAL},
+    #{month4,jdbcType=DECIMAL},
+    #{month5,jdbcType=DECIMAL},
+    #{month6,jdbcType=DECIMAL},
+    #{month7,jdbcType=DECIMAL},
+    #{month8,jdbcType=DECIMAL},
+    #{month9,jdbcType=DECIMAL},
+    #{month10,jdbcType=DECIMAL},
+    #{month11,jdbcType=DECIMAL},
+    #{month12,jdbcType=DECIMAL}
+        )
+
+    </insert>
+
+    <update id="update" parameterType="com.attiot.railAnaly.metro.entity.APerformanceStatYearscore">
+        UPDATE a_performance_stat_yearscore
+        SET
+        `year` = #{year},
+    `depart_id` = #{departId},
+    `depart_type` = #{departType},
+    `userid` = #{userid},
+    `month_1` = #{month1},
+    `month_2` = #{month2},
+    `month_3` = #{month3},
+    `month_4` = #{month4},
+    `month_5` = #{month5},
+    `month_6` = #{month6},
+    `month_7` = #{month7},
+    `month_8` = #{month8},
+    `month_9` = #{month9},
+    `month_10` = #{month10},
+    `month_11` = #{month11},
+    `month_12` = #{month12}
+        WHERE ID = #{id}
+    </update>
+
+    <select id="query" parameterType="com.attiot.railAnaly.metro.param.APerformanceStatYearscoreQueryParam" resultMap="APerformanceStatYearscore">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_performance_stat_yearscore
+        <include refid="where"/>
+        <include refid="basic"/>
+    </select>
+
+    <select id="queryStat" parameterType="com.attiot.railAnaly.metro.param.APerformanceStatYearscoreQueryParam" resultMap="APerformanceStatYearscore">
+        SELECT *
+        from
+        (
+        SELECT t.id,
+        t.`year`,
+        t.`depart_id`,
+        t.`depart_type`,
+        t.`userid`,
+        u.name as userName,
+        t.`month_1`,
+        t.`month_2`,
+        t.`month_3`,
+        t.`month_4`,
+        t.`month_5`,
+        t.`month_6`,
+        t.`month_7`,
+        t.`month_8`,
+        t.`month_9`,
+        t.`month_10`,
+        t.`month_11`,
+        t.`month_12`,
+        (t.month_1+t.month_2+t.month_3) as quarter_1,
+        (t.month_4+t.month_5+t.month_6) as quarter_2,
+        (t.month_7+t.month_8+t.month_9) as quarter_3,
+        (t.month_10+t.month_11+t.month_12) as quarter_4,
+        d.departname as departName
+        FROM a_performance_stat_yearscore t
+        LEFT JOIN t_s_depart d on t.depart_id = d.ID
+        LEFT JOIN a_metro_user_info u on u.id = t.userid
+        <where>
+            <if test="yearmonthBegin != null  and yearmonthBegin != ''"> AND t.year &gt;= #{yearmonthBegin}</if>
+            <if test="yearmonthEnd != null  and yearmonthEnd != ''"> AND t.year &lt;= #{yearmonthEnd}</if>
+            <if test="departId != null and departId != ''"> AND t.depart_id = #{departId}</if>
+        </where>
+<!--        UNION ALL-->
+<!--        SELECT-->
+<!--        b.id,-->
+<!--        t.`year`,-->
+<!--        b.realname as depart_id,-->
+<!--        e.depart_type,-->
+<!--        t.`month_1`,-->
+<!--        t.`month_2`,-->
+<!--        t.`month_3`,-->
+<!--        t.`month_4`,-->
+<!--        t.`month_5`,-->
+<!--        t.`month_6`,-->
+<!--        t.`month_7`,-->
+<!--        t.`month_8`,-->
+<!--        t.`month_9`,-->
+<!--        t.`month_10`,-->
+<!--        t.`month_11`,-->
+<!--        t.`month_12`,-->
+<!--        (t.month_1+t.month_2+t.month_3) as quarter_1,-->
+<!--        (t.month_4+t.month_5+t.month_6) as quarter_2,-->
+<!--        (t.month_7+t.month_8+t.month_9) as quarter_3,-->
+<!--        (t.month_10+t.month_11+t.month_12) as quarter_4,-->
+<!--        b.realname as departName-->
+<!--        from a_performance_stat_yearscore t-->
+<!--        LEFT JOIN a_scheduler_depart d on t.depart_id = d.depart_id-->
+<!--        LEFT JOIN t_s_user_org u on d.user_id = u.user_id-->
+<!--        LEFT JOIN t_s_depart e on e.id = u.org_id-->
+<!--        LEFT JOIN t_s_base_user b on b.id = u.user_id-->
+<!--        <where>-->
+<!--            <if test="yearmonthBegin != null  and yearmonthBegin != ''"> AND t.year &gt;= #{yearmonthBegin}</if>-->
+<!--            <if test="yearmonthEnd != null  and yearmonthEnd != ''"> AND t.year &lt;= #{yearmonthEnd}</if>-->
+<!--            <if test="departId != null and departId != ''"> AND t.depart_id = #{departId}</if>-->
+<!--            and u.org_id is not null-->
+<!--        </where>-->
+        ) as t
+        <include refid="basic"/>
+    </select>
+
+    <select id="getByParam" parameterType="com.attiot.railAnaly.metro.param.APerformanceStatYearscoreQueryParam" resultMap="APerformanceStatYearscore">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_performance_stat_yearscore
+        <include refid="where"/>
+        LIMIT 1
+    </select>
+
+
+    <select id="getById" parameterType="String"  resultMap="APerformanceStatYearscore">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_performance_stat_yearscore
+        <where>
+            ID = #{id}
+        </where>
+    </select>
+
+    <select id="queryCount" parameterType="com.attiot.railAnaly.metro.param.APerformanceStatYearscoreQueryParam" resultType="Long">
+        SELECT COUNT(0)
+        FROM a_performance_stat_yearscore
+        <include refid="where"/>
+    </select>
+
+    <select id="queryStatCount" parameterType="com.attiot.railAnaly.metro.param.APerformanceStatYearscoreQueryParam" resultType="Long">
+        SELECT COUNT(0)
+        from
+        (
+        SELECT t.id,
+        <include refid="column"/>
+        FROM a_performance_stat_yearscore t
+        <where>
+            <if test="yearmonthBegin != null  and yearmonthBegin != ''"> AND t.year &gt;= #{yearmonthBegin}</if>
+            <if test="yearmonthEnd != null  and yearmonthEnd != ''"> AND t.year &lt;= #{yearmonthEnd}</if>
+            <if test="departId != null and departId != ''"> AND t.depart_id = #{departId}</if>
+        </where>
+<!--        UNION ALL-->
+<!--        SELECT-->
+<!--        t.id,-->
+<!--        t.`year`,-->
+<!--        e.depart_type,-->
+<!--        b.realname as depart_id,-->
+<!--        t.`month_1`,-->
+<!--        t.`month_2`,-->
+<!--        t.`month_3`,-->
+<!--        t.`month_4`,-->
+<!--        t.`month_5`,-->
+<!--        t.`month_6`,-->
+<!--        t.`month_7`,-->
+<!--        t.`month_8`,-->
+<!--        t.`month_9`,-->
+<!--        t.`month_10`,-->
+<!--        t.`month_11`,-->
+<!--        t.`month_12`-->
+<!--        from a_performance_stat_yearscore t-->
+<!--        LEFT JOIN a_scheduler_depart d on t.depart_id = d.depart_id-->
+<!--        LEFT JOIN t_s_user_org u on d.user_id = u.user_id-->
+<!--        LEFT JOIN t_s_depart e on e.id = u.org_id-->
+<!--        LEFT JOIN t_s_base_user b on b.id = u.user_id-->
+<!--        <where>-->
+<!--            <if test="yearmonthBegin != null  and yearmonthBegin != ''"> AND t.year &gt;= #{yearmonthBegin}</if>-->
+<!--            <if test="yearmonthEnd != null  and yearmonthEnd != ''"> AND t.year &lt;= #{yearmonthEnd}</if>-->
+<!--            <if test="departId != null and departId != ''"> AND t.depart_id = #{departId}</if>-->
+<!--            and u.org_id is not null-->
+<!--        </where>-->
+        ) as t
+    </select>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM a_performance_stat_yearscore WHERE ID = #{id}
+    </delete>
+
+    <sql id="column">
+        `year`,
+    `depart_id`,
+    `depart_type`,
+    `userid`,
+    `month_1`,
+    `month_2`,
+    `month_3`,
+    `month_4`,
+    `month_5`,
+    `month_6`,
+    `month_7`,
+    `month_8`,
+    `month_9`,
+    `month_10`,
+    `month_11`,
+    `month_12`
+    </sql>
+
+    <sql id="columnTable">
+        a_performance_stat_yearscore.`year`,
+    a_performance_stat_yearscore.`depart_id`,
+    a_performance_stat_yearscore.`depart_type`,
+    a_performance_stat_yearscore.`userid`,
+    a_performance_stat_yearscore.`month_1`,
+    a_performance_stat_yearscore.`month_2`,
+    a_performance_stat_yearscore.`month_3`,
+    a_performance_stat_yearscore.`month_4`,
+    a_performance_stat_yearscore.`month_5`,
+    a_performance_stat_yearscore.`month_6`,
+    a_performance_stat_yearscore.`month_7`,
+    a_performance_stat_yearscore.`month_8`,
+    a_performance_stat_yearscore.`month_9`,
+    a_performance_stat_yearscore.`month_10`,
+    a_performance_stat_yearscore.`month_11`,
+    a_performance_stat_yearscore.`month_12`
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id != null"> AND id = #{id}</if>
+            <if test="year != null"> AND year = #{year}</if>
+            <if test="yearmonthBegin != null  and yearmonthBegin != ''"> AND year &gt;= #{yearmonthBegin}</if>
+            <if test="yearmonthEnd != null  and yearmonthEnd != ''"> AND year &lt;= #{yearmonthEnd}</if>
+            <if test="departId != null and departId != ''"> AND depart_id = #{departId}</if>
+            <if test="departType != null"> AND depart_type = #{departType}</if>
+            <if test="month1 != null"> AND month_1 = #{month1}</if>
+            <if test="month2 != null"> AND month_2 = #{month2}</if>
+            <if test="month3 != null"> AND month_3 = #{month3}</if>
+            <if test="month4 != null"> AND month_4 = #{month4}</if>
+            <if test="month5 != null"> AND month_5 = #{month5}</if>
+            <if test="month6 != null"> AND month_6 = #{month6}</if>
+            <if test="month7 != null"> AND month_7 = #{month7}</if>
+            <if test="month8 != null"> AND month_8 = #{month8}</if>
+            <if test="month9 != null"> AND month_9 = #{month9}</if>
+            <if test="month10 != null"> AND month_10 = #{month10}</if>
+            <if test="month11 != null"> AND month_11 = #{month11}</if>
+            <if test="month12 != null"> AND month_12 = #{month12}</if>
+        </where>
+    </sql>
+
+    <sql id="basic">
+        <if test="column != null">
+            ORDER BY #{column} #{sort}
+        </if>
+        <if test="pageNo != -1">
+            LIMIT #{startIndex},#{pageSize}
+        </if>
+        <if test="pageNo == -1 and limit != -1">
+            LIMIT #{limit}
+        </if>
+        <if test="lock">
+            <if test="lockMode == 0">
+                FOR UPDATE
+            </if>
+            <if test="lockMode == 1">
+                LOCK IN SHARE MODE
+            </if>
+        </if>
+    </sql>
+</mapper>

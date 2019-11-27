@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.metro.dao.APerformanceBusinessDao">
+    <resultMap id="APerformanceBusiness" type="com.attiot.railAnaly.metro.entity.APerformanceBusiness">
+        <id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+<result property="code" column="code" javaType="String" jdbcType="VARCHAR"/>
+<result property="name" column="name" javaType="String" jdbcType="VARCHAR"/>
+<result property="parentId" column="parent_id" javaType="String" jdbcType="VARCHAR"/>
+<result property="deleted" column="deleted" javaType="String" jdbcType="VARCHAR"/>
+<result property="creator" column="creator" javaType="String" jdbcType="VARCHAR"/>
+<result property="createtime" column="createtime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+<result property="modifor" column="modifor" javaType="String" jdbcType="VARCHAR"/>
+<result property="modifytime" column="modifytime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+
+    </resultMap>
+    <insert id="insert" parameterType="com.attiot.railAnaly.metro.entity.APerformanceBusiness">
+        INSERT INTO a_performance_business
+        (id,<include refid="column"/>)
+        VALUES (
+        md5(uuid()),
+        #{code,jdbcType=VARCHAR},
+    #{name,jdbcType=VARCHAR},
+    #{parentId,jdbcType=VARCHAR},
+    #{deleted,jdbcType=VARCHAR},
+    #{creator,jdbcType=VARCHAR},
+        now(),
+    #{modifor,jdbcType=VARCHAR},
+        now()
+        )
+
+    </insert>
+
+    <update id="update" parameterType="com.attiot.railAnaly.metro.entity.APerformanceBusiness">
+        UPDATE a_performance_business
+        SET
+        `code` = #{code},
+    `name` = #{name},
+    `parent_id` = #{parentId},
+    `deleted` = #{deleted},
+    `modifor` = #{modifor},
+    modifytime = now()
+        WHERE ID = #{id}
+    </update>
+
+    <select id="query" parameterType="com.attiot.railAnaly.metro.param.APerformanceBusinessQueryParam" resultMap="APerformanceBusiness">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_performance_business
+        <include refid="where"/>
+        <include refid="basic"/>
+    </select>
+
+
+    <select id="getByParam" parameterType="com.attiot.railAnaly.metro.param.APerformanceBusinessQueryParam" resultMap="APerformanceBusiness">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_performance_business
+        <include refid="where"/>
+        LIMIT 1
+    </select>
+
+
+    <select id="getById" parameterType="String"  resultMap="APerformanceBusiness">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_performance_business
+        <where>
+            ID = #{id}
+        </where>
+    </select>
+
+    <select id="queryCount" parameterType="com.attiot.railAnaly.metro.param.APerformanceBusinessQueryParam" resultType="Long">
+        SELECT COUNT(0)
+        FROM a_performance_business
+        <include refid="where"/>
+    </select>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM a_performance_business WHERE ID = #{id}
+    </delete>
+
+    <sql id="column">
+        `code`,
+    `name`,
+    `parent_id`,
+    `deleted`,
+    `creator`,
+    `createtime`,
+    `modifor`,
+    `modifytime`
+    </sql>
+
+    <sql id="columnTable">
+        a_performance_business.`code`,
+    a_performance_business.`name`,
+    a_performance_business.`parent_id`,
+    a_performance_business.`deleted`,
+    a_performance_business.`creator`,
+    a_performance_business.`createtime`,
+    a_performance_business.`modifor`,
+    a_performance_business.`modifytime`
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id != null"> AND id = #{id}</if>
+<if test="code != null"> AND code = #{code}</if>
+    <if test="name != null"> AND name = #{name}</if>
+    <if test="parentId != null"> AND parent_id = #{parentId}</if>
+    <if test="deleted != null"> AND deleted = #{deleted}</if>
+    <if test="creator != null"> AND creator = #{creator}</if>
+    <if test="createtime != null"> AND createtime = #{createtime}</if>
+    <if test="modifor != null"> AND modifor = #{modifor}</if>
+    <if test="modifytime != null"> AND modifytime = #{modifytime}</if>
+        </where>
+    </sql>
+
+    <sql id="basic">
+        <if test="column != null">
+            ORDER BY #{column} #{sort}
+        </if>
+        <if test="pageNo != -1">
+            LIMIT #{startIndex},#{pageSize}
+        </if>
+        <if test="pageNo == -1 and limit != -1">
+            LIMIT #{limit}
+        </if>
+        <if test="lock">
+            <if test="lockMode == 0">
+                FOR UPDATE
+            </if>
+            <if test="lockMode == 1">
+                LOCK IN SHARE MODE
+            </if>
+        </if>
+    </sql>
+</mapper>

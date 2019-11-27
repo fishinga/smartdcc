@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.workflow.dao.AWorkflowFormDao">
+    <resultMap id="AWorkflowForm" type="com.attiot.railAnaly.workflow.entity.AWorkflowForm">
+        <id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="formName" column="form_name" javaType="String" jdbcType="VARCHAR"/>
+        <result property="formUrl" column="form_url" javaType="String" jdbcType="VARCHAR"/>
+        <result property="remarks" column="remarks" javaType="String" jdbcType="VARCHAR"/>
+        <result property="creator" column="creator" javaType="String" jdbcType="VARCHAR"/>
+        <result property="createtime" column="createtime" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="modifor" column="modifor" javaType="String" jdbcType="VARCHAR"/>
+        <result property="modifytime" column="modifytime" javaType="Date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="query" parameterType="com.attiot.railAnaly.workflow.param.AWorkflowFormQueryParam" resultMap="AWorkflowForm">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_workflow_form
+        <include refid="where"/>
+        <include refid="basic"/>
+    </select>
+
+
+    <select id="getByParam" parameterType="com.attiot.railAnaly.workflow.param.AWorkflowFormQueryParam" resultMap="AWorkflowForm">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_workflow_form
+        <include refid="where"/>
+        LIMIT 1
+    </select>
+
+
+    <select id="getById" parameterType="String"  resultMap="AWorkflowForm">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_workflow_form
+        <where>
+            ID = #{id}
+        </where>
+    </select>
+
+    <select id="queryCount" parameterType="com.attiot.railAnaly.workflow.param.AWorkflowFormQueryParam" resultType="Long">
+        SELECT COUNT(0)
+        FROM a_workflow_form
+        <include refid="where"/>
+    </select>
+
+    <sql id="column">
+        `form_name`,
+        `form_url`,
+        `remarks`,
+        `creator`,
+        `createtime`,
+        `modifor`,
+        `modifytime`
+    </sql>
+
+    <sql id="columnTable">
+        a_workflow_form.`form_name`,
+        a_workflow_form.`form_url`,
+        a_workflow_form.`remarks`,
+        a_workflow_form.`creator`,
+        a_workflow_form.`createtime`,
+        a_workflow_form.`modifor`,
+        a_workflow_form.`modifytime`
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id != null"> AND id = #{id}</if>
+            <if test="formName != null"> AND form_name = #{formName}</if>
+            <if test="formUrl != null"> AND form_url = #{formUrl}</if>
+            <if test="remarks != null"> AND remarks = #{remarks}</if>
+            <if test="creator != null"> AND creator = #{creator}</if>
+            <if test="createtime != null"> AND createtime = #{createtime}</if>
+            <if test="modifor != null"> AND modifor = #{modifor}</if>
+            <if test="modifytime != null"> AND modifytime = #{modifytime}</if>
+        </where>
+    </sql>
+
+    <sql id="basic">
+        <if test="column != null">
+            ORDER BY #{column} #{sort}
+        </if>
+        <if test="pageNo != -1">
+            LIMIT #{startIndex},#{pageSize}
+        </if>
+        <if test="pageNo == -1 and limit != -1">
+            LIMIT #{limit}
+        </if>
+        <if test="lock">
+            <if test="lockMode == 0">
+                FOR UPDATE
+            </if>
+            <if test="lockMode == 1">
+                LOCK IN SHARE MODE
+            </if>
+        </if>
+    </sql>
+</mapper>

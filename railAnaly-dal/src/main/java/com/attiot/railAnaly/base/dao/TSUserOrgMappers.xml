@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.base.dao.TSUserOrgDao">
+	<resultMap id="TSUserOrg" type="com.attiot.railAnaly.base.entity.TSUserOrg">
+		<id property="id" column="ID" javaType="String" jdbcType="VARCHAR"/>
+		<result property="userId" column="user_id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="orgId" column="org_id" javaType="String" jdbcType="VARCHAR"/>
+
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.attiot.railAnaly.base.entity.TSUserOrg">
+		INSERT INTO t_s_user_org
+		(
+			id,
+			<include refid="column" />
+		) VALUES (
+			#{id,jdbcType=VARCHAR},
+			#{userId,jdbcType=VARCHAR},
+			#{orgId,jdbcType=VARCHAR}
+		)
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT REPLACE(UUID(),'-','')
+		</selectKey>
+	</insert>
+
+	<update id="update" parameterType="com.attiot.railAnaly.base.entity.TSUserOrg">
+		UPDATE t_s_user_org
+		SET
+			`user_id` = #{userId},
+			`org_id` = #{orgId}
+		WHERE ID = #{id}
+	</update>
+
+	<delete id="delete" parameterType="String">
+		DELETE FROM t_s_user_org WHERE ID = #{id}
+	</delete>
+	
+	<!-- 删除TSUserOrg -->
+	<delete id="deleteUserOrg" parameterType="String">
+		DELETE FROM t_s_user_org WHERE ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="String" resultMap="TSUserOrg">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM t_s_user_org
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+
+	<select id="getByParam" parameterType="com.attiot.railAnaly.base.param.TSUserOrgQueryParam" resultMap="TSUserOrg">
+		SELECT ID,
+		<include refid="column" />
+		FROM t_s_user_org
+		<include refid="where" />
+		LIMIT 1
+	</select>
+
+	<select id="query" parameterType="com.attiot.railAnaly.base.param.TSUserOrgQueryParam"	resultMap="TSUserOrg">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM t_s_user_org
+		<include refid="where" />
+		<include refid="basic" />
+	</select>
+
+	<select id="queryCount" parameterType="com.attiot.railAnaly.base.param.TSUserOrgQueryParam" resultType="Long">
+		SELECT COUNT(0)
+		FROM t_s_user_org
+		<include refid="where" />
+	</select>
+
+	<!---  获取根据角色获取用户ID begin  -->
+	<select id="getUserByRole" parameterType="String" resultType="String">
+		SELECT
+		group_concat( DISTINCT userid separator ',')
+		FROM
+		t_s_role_user
+		WHERE
+		 find_in_set(roleid, #{assginIds}) > 0
+	</select>
+	<!--- 获取根据角色获取用户ID   end  -->
+
+	<!---  获取根据org获取用户ID begin  -->
+	<select id="getUserByOrg" parameterType="String" resultType="String">
+		SELECT
+			group_concat(
+				DISTINCT b.userid SEPARATOR ','
+			)
+		FROM
+			t_s_role_org a,
+			t_s_role_user b
+		WHERE
+			find_in_set(a.org_id, #{assginIds}) > 0
+		AND a.role_id = b.roleid
+	</select>
+	<!--- 获取根据org获取用户ID   end  -->
+
+	<!---  根据当前用户ID获取工班长ID begin  -->
+	<select id="getUserByCurUser" parameterType="String" resultType="String">
+		SELECT
+			group_concat(
+				DISTINCT a.manager SEPARATOR ','
+			)
+		FROM
+			t_s_depart a,
+			t_s_user_org b
+		WHERE
+			b.org_id = a.id
+		AND b.user_id = #{userId}
+	</select>
+	<!---  根据当前用户ID获取工班长ID begin  -->
+
+
+
+	<sql id="column">
+		`user_id`,
+		`org_id`
+	</sql>
+
+	<sql id="columnTable">
+		t_s_user_org.`user_id`,
+		t_s_user_org.`org_id`
+	</sql>
+
+	<sql id="where">
+		<where>
+			<if test="id != null"> AND ID = #{id}</if>
+			<if test="userId != null"> AND user_id = #{userId}</if>
+			<if test="orgId != null"> AND org_id = #{orgId}</if>
+		</where>
+	</sql>
+
+	<sql id="basic">
+		<if test="column != null">ORDER BY #{column} #{sort}</if>
+		<if test="pageNo != -1">LIMIT #{startIndex}, #{pageSize}</if>
+		<if test="pageNo == -1 and limit != -1">LIMIT #{limit}</if>
+		<if test="lock">
+			<if test="lockMode == 0">FOR UPDATE</if>
+			<if test="lockMode == 1">LOCK IN SHARE MODE</if>
+		</if>
+	</sql>
+</mapper>

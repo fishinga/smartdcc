@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.base.dao.TSUserDao">
+	<resultMap id="TSUser" type="com.attiot.railAnaly.base.entity.TSUser">
+		<id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="email" column="email" javaType="String" jdbcType="VARCHAR"/>
+		<result property="mobilephone" column="mobilePhone" javaType="String" jdbcType="VARCHAR"/>
+		<result property="officephone" column="officePhone" javaType="String" jdbcType="VARCHAR"/>
+		<result property="signaturefile" column="signatureFile" javaType="String" jdbcType="VARCHAR"/>
+		<result property="updateName" column="update_name" javaType="String" jdbcType="VARCHAR"/>
+		<result property="updateDate" column="update_date" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="updateBy" column="update_by" javaType="String" jdbcType="VARCHAR"/>
+		<result property="createName" column="create_name" javaType="String" jdbcType="VARCHAR"/>
+		<result property="createDate" column="create_date" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="createBy" column="create_by" javaType="String" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.attiot.railAnaly.base.entity.TSUser">
+		INSERT INTO t_s_user
+		(
+			id,
+			<include refid="column" />
+		) VALUES (
+			#{id,jdbcType=VARCHAR},
+			#{email,jdbcType=VARCHAR},
+			#{mobilephone,jdbcType=VARCHAR},
+			#{officephone,jdbcType=VARCHAR},
+			#{signaturefile,jdbcType=VARCHAR},
+			#{updateName,jdbcType=VARCHAR},
+			#{updateDate,jdbcType=TIMESTAMP},
+			#{updateBy,jdbcType=VARCHAR},
+			#{createName,jdbcType=VARCHAR},
+			#{createDate,jdbcType=TIMESTAMP},
+			#{createBy,jdbcType=VARCHAR}
+		)
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT REPLACE(UUID(),'-','')
+		</selectKey>
+	</insert>
+
+	<update id="update" parameterType="com.attiot.railAnaly.base.entity.TSUser">
+		UPDATE t_s_user
+		SET
+			`email` = #{email},
+			`mobilePhone` = #{mobilephone},
+			`officePhone` = #{officephone},
+			`signatureFile` = #{signaturefile},
+			`update_name` = #{updateName},
+			`update_date` = #{updateDate},
+			`update_by` = #{updateBy},
+			`create_name` = #{createName},
+			`create_date` = #{createDate},
+			`create_by` = #{createBy}
+		WHERE ID = #{id}
+	</update>
+
+	<delete id="delete" parameterType="String">
+		DELETE FROM t_s_user WHERE ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="String" resultMap="TSUser">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM t_s_user
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+
+	<select id="getTSBaseUserListByDepartId" parameterType="String" resultMap="TSUser">
+		SELECT t1.*,u.myposition as positionCode FROM
+		t_s_base_user t1, t_s_user_org t2,a_metro_user_info u
+		WHERE
+		t1.id = t2.user_id
+		and t1.username = u.`code`
+		AND find_in_set(t2.org_id,#{departId})>0
+	</select>
+
+	<select id="getTSBaseUserListByUserIds" parameterType="String"  resultType="map" >
+		SELECT
+			u.id,u.username,u.realname
+		FROM  t_s_base_user u , t_s_user t
+		WHERE t.id = u.id
+		AND  find_in_set(u.id,#{userIds})>0
+	</select>
+
+	<select id="getTSBaseUserListByRoleCode" parameterType="String"	resultMap="TSUser">
+		select t.* from t_s_base_user t
+		where t.id IN(select distinct userid from t_s_role_user t1,t_s_role t2 where t1.roleid = t2.id and find_in_set(t2.rolecode,#{roleCode})>0)
+	</select>
+
+	<select id="getByParam" parameterType="com.attiot.railAnaly.base.param.TSUserQueryParam" resultMap="TSUser">
+		SELECT ID,
+		<include refid="column" />
+		FROM t_s_user
+		<include refid="where" />
+		LIMIT 1
+	</select>
+
+	<select id="query" parameterType="com.attiot.railAnaly.base.param.TSUserQueryParam"	resultMap="TSUser">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM t_s_user
+		<include refid="where" />
+		<include refid="basic" />
+	</select>
+
+	<select id="queryCount" parameterType="com.attiot.railAnaly.base.param.TSUserQueryParam" resultType="Long">
+		SELECT COUNT(0)
+		FROM t_s_user
+		<include refid="where" />
+	</select>
+
+	<select id="getList" parameterType="com.attiot.railAnaly.base.param.TSBaseUserQueryParam" resultType="Map">
+		SELECT
+		bu.id id,
+		u.create_date,
+		u.update_date,
+		bu.realname,
+		bu.delete_flag,
+		bu.username,
+		(select o.org_id from t_s_user_org o where o.user_id =  bu.ID LIMIT 1) departid,
+		bu.status,
+		u.mobilePhone,
+		bu.password
+		FROM
+		t_s_base_user bu
+		INNER JOIN t_s_user u ON bu.id = u.id
+	</select>
+
+
+	<select id="getUserListByIds" parameterType="String" resultType="Map">
+		SELECT
+			realname
+		FROM
+			t_s_base_user
+		<where>
+			FIND_IN_SET(id, #{ids}) > 0
+		</where>
+	</select>
+
+
+	<select id="getUserDepartList"  resultType="Map">
+		SELECT t.id as userId,
+		t.`code` as userCode,
+		t.`name` as userName,
+		t.myposition as positionCode,
+		o.org_id as departId
+		from a_metro_user_info t
+		INNER JOIN t_s_base_user u on t.`code` = u.username
+		INNER JOIN t_s_user_org o on u.ID = o.user_id
+	</select>
+
+
+	<sql id="column">
+		`email`,
+		`mobilePhone`,
+		`officePhone`,
+		`signatureFile`,
+		`update_name`,
+		`update_date`,
+		`update_by`,
+		`create_name`,
+		`create_date`,
+		`create_by`
+	</sql>
+
+	<sql id="columnTable">
+		t_s_user.`email`,
+		t_s_user.`mobilePhone`,
+		t_s_user.`officePhone`,
+		t_s_user.`signatureFile`,
+		t_s_user.`update_name`,
+		t_s_user.`update_date`,
+		t_s_user.`update_by`,
+		t_s_user.`create_name`,
+		t_s_user.`create_date`,
+		t_s_user.`create_by`
+	</sql>
+
+	<sql id="where">
+		<where>
+			<if test="id != null"> AND id = #{id}</if>
+			<if test="email != null"> AND email = #{email}</if>
+			<if test="mobilephone != null"> AND mobilePhone = #{mobilephone}</if>
+			<if test="officephone != null"> AND officePhone = #{officephone}</if>
+			<if test="signaturefile != null"> AND signatureFile = #{signaturefile}</if>
+			<if test="updateName != null"> AND update_name = #{updateName}</if>
+			<if test="updateDate != null"> AND update_date = #{updateDate}</if>
+			<if test="updateBy != null"> AND update_by = #{updateBy}</if>
+			<if test="createName != null"> AND create_name = #{createName}</if>
+			<if test="createDate != null"> AND create_date = #{createDate}</if>
+			<if test="createBy != null"> AND create_by = #{createBy}</if>
+		</where>
+	</sql>
+
+	<sql id="basic">
+		<if test="column != null">ORDER BY #{column} #{sort}</if>
+		<if test="pageNo != -1">LIMIT #{startIndex}, #{pageSize}</if>
+		<if test="pageNo == -1 and limit != -1">LIMIT #{limit}</if>
+		<if test="lock">
+			<if test="lockMode == 0">FOR UPDATE</if>
+			<if test="lockMode == 1">LOCK IN SHARE MODE</if>
+		</if>
+	</sql>
+</mapper>

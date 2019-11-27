@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.metro.dao.APerformanceStatPersonalDao">
+    <resultMap id="APerformanceStatPersonal" type="com.attiot.railAnaly.metro.entity.APerformanceStatPersonal">
+        <id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="yearmonth" column="yearmonth" javaType="String" jdbcType="VARCHAR"/>
+        <result property="userid" column="userid" javaType="String" jdbcType="VARCHAR"/>
+        <result property="departId" column="depart_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="positionCode" column="position_code" javaType="String" jdbcType="VARCHAR"/>
+        <result property="workload" column="workload" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="workloadScore" column="workload" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="repairScore" column="repair_score" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="productScore" column="product_score" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="labourScore" column="labour_score" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="comprehensivScore" column="comprehensiv_score" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="rewardsScore" column="rewards_score" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="evaluteScore" column="evalute_score" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="evaluteLevel" column="evalute_level" javaType="String" jdbcType="VARCHAR"/>
+        <result property="lastUpdate" column="last_update" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        <result property="rationalSuggestScore" column="rational_suggest_score" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="sixSScore" column="sixS_score" javaType="Double" jdbcType="DECIMAL"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.attiot.railAnaly.metro.entity.APerformanceStatPersonal">
+        INSERT INTO a_performance_stat_personal
+        (id,<include refid="column"/>)
+        VALUES (
+        md5(uuid()),
+        #{yearmonth,jdbcType=VARCHAR},
+        #{userid,jdbcType=VARCHAR},
+        #{departId,jdbcType=VARCHAR},
+        #{positionCode,jdbcType=VARCHAR},
+        #{workload,jdbcType=DECIMAL},
+        #{workloadScore,jdbcType=DECIMAL},
+        #{repairScore,jdbcType=DECIMAL},
+        #{productScore,jdbcType=DECIMAL},
+        #{labourScore,jdbcType=DECIMAL},
+        #{comprehensivScore,jdbcType=DECIMAL},
+        #{rewardsScore,jdbcType=DECIMAL},
+        #{evaluteScore,jdbcType=DECIMAL},
+        #{evaluteLevel,jdbcType=VARCHAR},
+        now(),
+        #{rationalSuggestScore,jdbcType=DECIMAL},
+        #{sixSScore,jdbcType=DECIMAL}
+        )
+
+    </insert>
+
+    <update id="update" parameterType="com.attiot.railAnaly.metro.entity.APerformanceStatPersonal">
+        UPDATE a_performance_stat_personal
+        SET
+        `yearmonth` = #{yearmonth},
+        `userid` = #{userid},
+        `depart_id` = #{departId},
+        `position_code` = #{positionCode},
+        `workload` = #{workload},
+        `workload_score` = #{workloadScore},
+        `repair_score` = #{repairScore},
+        `product_score` = #{productScore},
+        `labour_score` = #{labourScore},
+        `comprehensiv_score` = #{comprehensivScore},
+        `rewards_score` = #{rewardsScore},
+        `evalute_score` = #{evaluteScore},
+        `evalute_level` = #{evaluteLevel},
+        `last_update` = now(),
+         `rational_suggest_score` = #{rationalSuggestScore},
+          `sixS_score` = #{sixSScore}
+        WHERE ID = #{id}
+    </update>
+
+    <select id="query" parameterType="com.attiot.railAnaly.metro.param.APerformanceStatPersonalQueryParam" resultMap="APerformanceStatPersonal">
+        SELECT t.ID,
+        t.`yearmonth`,
+        t.`userid`,
+        t.`depart_id`,
+        t.`position_code`,
+        t.`workload`,
+        t.`workload_score`,
+        t.`repair_score`,
+        t.`product_score`,
+        t.`labour_score`,
+        t.`comprehensiv_score`,
+        t.`rewards_score`,
+        t.`evalute_score`,
+        t.`evalute_level`,
+        t.`last_update`,
+        t.`rational_suggest_score`,
+        t.`sixS_score`,
+        u.name as userName,
+        d.departname as departName
+        FROM a_performance_stat_personal t
+        LEFT JOIN a_metro_user_info u on u.id = t.userid
+        LEFT JOIN t_s_depart d on t.depart_id = d.ID
+        <include refid="where"/>
+        <include refid="basic"/>
+    </select>
+
+
+    <select id="getByParam" parameterType="com.attiot.railAnaly.metro.param.APerformanceStatPersonalQueryParam" resultMap="APerformanceStatPersonal">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_performance_stat_personal t
+        <include refid="where"/>
+        LIMIT 1
+    </select>
+
+
+    <select id="getById" parameterType="String"  resultMap="APerformanceStatPersonal">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_performance_stat_personal
+        <where>
+            ID = #{id}
+        </where>
+    </select>
+
+    <select id="queryCount" parameterType="com.attiot.railAnaly.metro.param.APerformanceStatPersonalQueryParam" resultType="Long">
+        SELECT COUNT(0)
+        FROM a_performance_stat_personal t
+        LEFT JOIN a_metro_user_info u on u.id = t.userid
+        <include refid="where"/>
+    </select>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM a_performance_stat_personal WHERE ID = #{id}
+    </delete>
+
+    <sql id="column">
+        `yearmonth`,
+        `userid`,
+        `depart_id`,
+        `position_code`,
+        `workload`,
+        `workload_score`,
+        `repair_score`,
+        `product_score`,
+        `labour_score`,
+        `comprehensiv_score`,
+        `rewards_score`,
+        `evalute_score`,
+        `evalute_level`,
+        `last_update`,
+        `rational_suggest_score`,
+        `sixS_score`
+    </sql>
+
+    <sql id="columnTable">
+        a_performance_stat_personal.`yearmonth`,
+        a_performance_stat_personal.`userid`,
+        a_performance_stat_personal.`depart_id`,
+        a_performance_stat_personal.`position_code`,
+        a_performance_stat_personal.`workload`,
+        a_performance_stat_personal.`workload_score`,
+        a_performance_stat_personal.`repair_score`,
+        a_performance_stat_personal.`product_score`,
+        a_performance_stat_personal.`labour_score`,
+        a_performance_stat_personal.`comprehensiv_score`,
+        a_performance_stat_personal.`rewards_score`,
+        a_performance_stat_personal.`evalute_score`,
+        a_performance_stat_personal.`evalute_level`,
+        a_performance_stat_personal.`last_update`,
+        a_performance_stat_personal.`rational_suggest_score`,
+        a_performance_stat_personal.`sixS_score`
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id != null"> AND t.id = #{id}</if>
+            <if test="yearmonth != null  and yearmonth != ''"> AND t.yearmonth = #{yearmonth}</if>
+            <if test="yearmonthBegin != null  and yearmonthBegin != ''"> AND t.yearmonth &gt;= #{yearmonthBegin}</if>
+            <if test="yearmonthEnd != null  and yearmonthEnd != ''"> AND t.yearmonth &lt;= #{yearmonthEnd}</if>
+            <if test="userid != null"> AND t.userid = #{userid}</if>
+            <if test="departId != null and departId != ''"> AND t.depart_id = #{departId}</if>
+            <if test="positionCode != null"> AND t.position_code = #{positionCode}</if>
+            <if test="workload != null"> AND t.workload = #{workload}</if>
+            <if test="repairScore != null"> AND t.repair_score = #{repairScore}</if>
+            <if test="productScore != null"> AND t.product_score = #{productScore}</if>
+            <if test="labourScore != null"> AND t.labour_score = #{labourScore}</if>
+            <if test="comprehensivScore != null"> AND t.comprehensiv_score = #{comprehensivScore}</if>
+            <if test="rewardsScore != null"> AND t.rewards_score = #{rewardsScore}</if>
+            <if test="evaluteScore != null"> AND t.evalute_score = #{evaluteScore}</if>
+            <if test="evaluteLevel != null"> AND t.evalute_level = #{evaluteLevel}</if>
+            <if test="lastUpdate != null"> AND t.last_update = #{lastUpdate}</if>
+            <if test="userName != null and userName !=''"> AND u.name LIKE CONCAT('%',#{userName},'%')</if>
+        </where>
+    </sql>
+
+    <sql id="basic">
+        <if test="column != null">
+            ORDER BY #{column} #{sort}
+        </if>
+        <if test="pageNo != -1">
+            LIMIT #{startIndex},#{pageSize}
+        </if>
+        <if test="pageNo == -1 and limit != -1">
+            LIMIT #{limit}
+        </if>
+        <if test="lock">
+            <if test="lockMode == 0">
+                FOR UPDATE
+            </if>
+            <if test="lockMode == 1">
+                LOCK IN SHARE MODE
+            </if>
+        </if>
+    </sql>
+</mapper>

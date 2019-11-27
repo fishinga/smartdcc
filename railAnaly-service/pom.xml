@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.attiot.railAnaly.railAnaly4spring-cloud</groupId>
+	<artifactId>railAnaly-service</artifactId>
+	<version>1.0.0</version>
+	<packaging>jar</packaging>
+	<name>gzmtr-service</name>
+	<description>gzmtr-service</description>
+
+	<parent>
+		<groupId>com.attiot.railAnaly</groupId>
+		<artifactId>railAnaly4spring-cloud</artifactId>
+		<version>1.0.0</version>
+	</parent>
+
+<!--	<repositories>-->
+<!--		&lt;!&ndash;物之联私有仓库地址&ndash;&gt;-->
+<!--		<repository>-->
+<!--			<id>maven-releases</id>-->
+<!--			<name>maven-releases</name>-->
+<!--			<url>http://59.57.151.2:8081/repository/maven-releases/</url>-->
+<!--		</repository>-->
+<!--	</repositories>-->
+
+	<dependencies>
+		<dependency>
+			<groupId>com.attiot.railAnaly</groupId>
+			<artifactId>railAnaly-dal</artifactId>
+			<version>1.2.8</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-activemq</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-pool</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>1.3.0</version>
+		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-actuator</artifactId>-->
+<!--		</dependency>-->
+		<!--<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>-->
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.4.7</version>
+		</dependency>
+		<dependency>
+			<groupId>jaxen</groupId>
+			<artifactId>jaxen</artifactId>
+			<version>1.1.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.redisson</groupId>
+			<artifactId>redisson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+		<!--sms start -->
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-core</artifactId>
+			<version>3.2.3</version>
+		</dependency>
+		 <dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<!--sms end-->
+		<!--jpush-->
+		<dependency>
+			<groupId>cn.jpush.api</groupId>
+			<artifactId>jpush-client</artifactId>
+			<version>3.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.4.1</version>
+		</dependency>
+		<!--<dependency>
+			<groupId>com.alipay</groupId>
+			<artifactId>alipay-sdk-java</artifactId>
+			<version>20171027120314</version>
+		</dependency>-->
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<finalName>${project.name}</finalName>
+				</configuration>
+			</plugin>
+		    <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+		</plugins>
+	</build>
+
+</project>

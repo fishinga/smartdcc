@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.goods.dao.APointListHisDao">
+	<resultMap id="APointListHis" type="com.attiot.railAnaly.goods.entity.APointListHis">
+		<id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="trainNo" column="train_no" javaType="String" jdbcType="VARCHAR"/>
+		<result property="parentId" column="parent_id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="ppointId" column="ppoint_id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="ppointContents" column="ppoint_contents" javaType="String" jdbcType="VARCHAR"/>
+		<result property="ppointCreator" column="ppoint_creator" javaType="String" jdbcType="VARCHAR"/>
+		<result property="ppointTransfer" column="ppoint_transfer" javaType="String" jdbcType="VARCHAR"/>
+		<result property="isElectric" column="is_electric" javaType="Integer" jdbcType="INTEGER"/>
+		<result property="startJob" column="start_job" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="ppointDuration" column="ppoint_duration" javaType="Double" jdbcType="DECIMAL"/>
+		<result property="metroStatus" column="metro_status" javaType="String" jdbcType="VARCHAR"/>
+		<result property="originalStatus" column="original_status" javaType="String" jdbcType="VARCHAR"/>
+		<result property="trackName" column="track_name" javaType="String" jdbcType="VARCHAR"/>
+		<result property="creator" column="creator" javaType="String" jdbcType="VARCHAR"/>
+		<result property="createtime" column="createtime" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="modifor" column="modifor" javaType="String" jdbcType="VARCHAR"/>
+		<result property="modifytime" column="modifytime" javaType="Date" jdbcType="TIMESTAMP"/>
+
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.attiot.railAnaly.goods.entity.APointListHis">
+		INSERT INTO a_point_list_his
+		(
+			id,
+			<include refid="column" />
+		) VALUES (
+			#{id,jdbcType=VARCHAR},
+			#{trainNo,jdbcType=VARCHAR},
+			#{parentId,jdbcType=VARCHAR},
+			#{ppointId,jdbcType=VARCHAR},
+			#{ppointContents,jdbcType=VARCHAR},
+			#{ppointCreator,jdbcType=VARCHAR},
+			#{ppointTransfer,jdbcType=VARCHAR},
+			#{isElectric,jdbcType=INTEGER},
+			#{startJob,jdbcType=TIMESTAMP},
+			#{ppointDuration,jdbcType=DECIMAL},
+			#{metroStatus,jdbcType=VARCHAR},
+			#{originalStatus},
+			#{trackName,jdbcType=VARCHAR},
+			#{creator,jdbcType=VARCHAR},
+			#{createtime,jdbcType=TIMESTAMP},
+			#{modifor,jdbcType=VARCHAR},
+			#{modifytime,jdbcType=TIMESTAMP}
+		)
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT REPLACE(UUID(),'-','')
+		</selectKey>
+	</insert>
+
+	<insert id="create" parameterType="com.attiot.railAnaly.goods.entity.PointList">
+		INSERT INTO a_point_list_his
+		(
+			id,
+			`train_no`,
+			`parent_id`,
+			`ppoint_id`,
+			`ppoint_contents`,
+			`ppoint_creator`,
+			`ppoint_transfer`,
+			`is_electric`,
+			`start_job`,
+			`ppoint_duration`,
+			`metro_status`,
+			original_status,
+			`track_name`,
+			`creator`,
+			`createtime`,
+			`modifor`,
+			`modifytime`
+		) VALUES (
+			#{id,jdbcType=VARCHAR},
+			#{trainNo,jdbcType=VARCHAR},
+			#{parentId,jdbcType=VARCHAR},
+			#{ppointId,jdbcType=VARCHAR},
+			#{ppointContents,jdbcType=VARCHAR},
+			#{ppointCreator,jdbcType=VARCHAR},
+			#{ppointTransfer,jdbcType=VARCHAR},
+			#{isElectric,jdbcType=INTEGER},
+			#{startJob,jdbcType=TIMESTAMP},
+			#{ppointDuration,jdbcType=DECIMAL},
+			#{metroStatus,jdbcType=VARCHAR},
+			#{originalStatus},
+			#{trackName,jdbcType=VARCHAR},
+			#{creator,jdbcType=VARCHAR},
+			#{createtime,jdbcType=TIMESTAMP},
+			#{modifor,jdbcType=VARCHAR},
+			#{modifytime,jdbcType=TIMESTAMP}
+		)
+
+	</insert>
+
+	<update id="update" parameterType="com.attiot.railAnaly.goods.entity.APointListHis">
+		UPDATE a_point_list_his
+		SET
+			`train_no` = #{trainNo},
+			`parent_id` = #{parentId},
+			`ppoint_id` = #{ppointId},
+			`ppoint_contents` = #{ppointContents},
+			`ppoint_creator` = #{ppointCreator},
+			`ppoint_transfer` = #{ppointTransfer},
+			`is_electric` = #{isElectric},
+			`start_job` = #{startJob},
+			`ppoint_duration` = #{ppointDuration},
+			`metro_status` = #{metroStatus},
+			original_status = #{originalStatus},
+			`track_name` = #{trackName},
+			`creator` = #{creator},
+			`createtime` = #{createtime},
+			`modifor` = #{modifor},
+			`modifytime` = #{modifytime}
+		WHERE ID = #{id}
+	</update>
+
+	<delete id="delete" parameterType="String">
+		DELETE FROM a_point_list_his WHERE ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="String" resultMap="APointListHis">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM a_point_list_his
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+
+	<select id="getByParam" parameterType="com.attiot.railAnaly.goods.param.APointListHisQueryParam" resultMap="APointListHis">
+		SELECT ID,
+		<include refid="column" />
+		FROM a_point_list_his
+		<include refid="where" />
+		LIMIT 1
+	</select>
+
+	<select id="query" parameterType="com.attiot.railAnaly.goods.param.APointListHisQueryParam"	resultMap="APointListHis">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM a_point_list_his
+		<include refid="where" />
+		<include refid="basic" />
+	</select>
+
+	<select id="queryCount" parameterType="com.attiot.railAnaly.goods.param.APointListHisQueryParam" resultType="Long">
+		SELECT COUNT(0)
+		FROM a_point_list_his
+		<include refid="where" />
+	</select>
+
+	<sql id="column">
+		`train_no`,
+		`parent_id`,
+		`ppoint_id`,
+		`ppoint_contents`,
+		`ppoint_creator`,
+		`ppoint_transfer`,
+		`is_electric`,
+		`start_job`,
+		`ppoint_duration`,
+		`metro_status`,
+		original_status,
+		`track_name`,
+		`creator`,
+		`createtime`,
+		`modifor`,
+		`modifytime`
+	</sql>
+
+	<sql id="columnTable">
+		a_point_list_his.`train_no`,
+		a_point_list_his.`parent_id`,
+		a_point_list_his.`ppoint_id`,
+		a_point_list_his.`ppoint_contents`,
+		a_point_list_his.`ppoint_creator`,
+		a_point_list_his.`ppoint_transfer`,
+		a_point_list_his.`is_electric`,
+		a_point_list_his.`start_job`,
+		a_point_list_his.`ppoint_duration`,
+		a_point_list_his.`metro_status`,
+		a_point_list_his.`track_name`,
+		a_point_list_his.`creator`,
+		a_point_list_his.`createtime`,
+		a_point_list_his.`modifor`,
+		a_point_list_his.`modifytime`
+	</sql>
+
+	<sql id="where">
+		<where>
+			<if test="id != null"> AND id = #{id}</if>
+			<if test="trainNo != null"> AND train_no = #{trainNo}</if>
+			<if test="parentId != null"> AND parent_id = #{parentId}</if>
+			<if test="ppointId != null"> AND ppoint_id = #{ppointId}</if>
+			<if test="ppointContents != null"> AND ppoint_contents = #{ppointContents}</if>
+			<if test="ppointCreator != null"> AND ppoint_creator = #{ppointCreator}</if>
+			<if test="ppointTransfer != null"> AND ppoint_transfer = #{ppointTransfer}</if>
+			<if test="isElectric != null"> AND is_electric = #{isElectric}</if>
+			<if test="startJob != null"> AND start_job = #{startJob}</if>
+			<if test="ppointDuration != null"> AND ppoint_duration = #{ppointDuration}</if>
+			<if test="metroStatus != null"> AND metro_status = #{metroStatus}</if>
+			<if test="trackName != null"> AND track_name = #{trackName}</if>
+			<if test="creator != null"> AND creator = #{creator}</if>
+			<if test="createtime != null"> AND createtime = #{createtime}</if>
+			<if test="modifor != null"> AND modifor = #{modifor}</if>
+			<if test="modifytime != null"> AND modifytime = #{modifytime}</if>
+		</where>
+	</sql>
+
+	<sql id="basic">
+		<if test="column != null">ORDER BY #{column} #{sort}</if>
+		<if test="pageNo != -1">LIMIT #{startIndex}, #{pageSize}</if>
+		<if test="pageNo == -1 and limit != -1">LIMIT #{limit}</if>
+		<if test="lock">
+			<if test="lockMode == 0">FOR UPDATE</if>
+			<if test="lockMode == 1">LOCK IN SHARE MODE</if>
+		</if>
+	</sql>
+</mapper>

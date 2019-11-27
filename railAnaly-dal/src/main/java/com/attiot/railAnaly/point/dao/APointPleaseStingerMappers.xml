@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.point.dao.APointPleaseStingerDao">
+    <resultMap id="APointPleaseStinger" type="com.attiot.railAnaly.point.entity.APointPleaseStinger">
+        <id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="pleasePointId" column="please_point_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="place" column="place" javaType="String" jdbcType="VARCHAR"/>
+        <result property="direction" column="direction" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="stingerCode" column="stinger_code" javaType="String" jdbcType="VARCHAR"/>
+        <result property="operatorId" column="operator_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="operatorName" column="operator_name" javaType="String" jdbcType="VARCHAR"/>
+        <result property="monitorId" column="monitor_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="monitorName" column="monitor_name" javaType="String" jdbcType="VARCHAR"/>
+        <result property="confirmerId" column="confirmer_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="confirmer" column="confirmer" javaType="String" jdbcType="VARCHAR"/>
+        <result property="confirmTime" column="confirm_time" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="sendKeyTime" column="send_key_time" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="givePowerTime" column="give_power_time" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="b1State" column="b1_state" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="b2State" column="b2_state" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="powerOffTime" column="power_off_time" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="outageTime" column="outage_time" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="takeBackTime" column="take_back_time" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="b1State2" column="b1_state2" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="b2State2" column="b2_state2" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="operatorId2" column="operator_id2" javaType="String" jdbcType="VARCHAR"/>
+        <result property="operatorName2" column="operator_name2" javaType="String" jdbcType="VARCHAR"/>
+        <result property="monitorId2" column="monitor_id2" javaType="String" jdbcType="VARCHAR"/>
+        <result property="monitorName2" column="monitor_name2" javaType="String" jdbcType="VARCHAR"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.attiot.railAnaly.point.entity.APointPleaseStinger">
+        INSERT INTO a_point_please_stinger
+        (
+        id,
+        <include refid="column"/>)
+        VALUES (
+        uuid(),
+        #{pleasePointId,jdbcType=VARCHAR},
+        #{place,jdbcType=VARCHAR},
+        #{direction,jdbcType=INTEGER},
+        #{stingerCode,jdbcType=VARCHAR},
+        #{confirmerId,jdbcType=VARCHAR},
+        #{confirmer,jdbcType=VARCHAR},
+        #{confirmTime,jdbcType=TIMESTAMP},
+        #{sendKeyTime,jdbcType=TIMESTAMP},
+        #{givePowerTime,jdbcType=TIMESTAMP},
+        #{b1State,jdbcType=INTEGER},
+        #{b2State,jdbcType=INTEGER},
+        #{powerOffTime,jdbcType=TIMESTAMP},
+        #{outageTime,jdbcType=TIMESTAMP},
+        #{takeBackTime,jdbcType=TIMESTAMP},
+        #{b1State2,jdbcType=INTEGER},
+        #{b2State2,jdbcType=INTEGER},
+        #{operatorId,jdbcType=VARCHAR},
+        #{operatorName,jdbcType=VARCHAR},
+        #{monitorId,jdbcType=VARCHAR},
+        #{monitorName,jdbcType=VARCHAR},
+        #{operatorId2,jdbcType=VARCHAR},
+        #{operatorName2,jdbcType=VARCHAR},
+        #{monitorId2,jdbcType=VARCHAR},
+        #{monitorName2,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.attiot.railAnaly.point.entity.APointPleaseStinger">
+        UPDATE a_point_please_stinger
+        SET
+        `please_point_id` = #{pleasePointId},
+        `place` = #{place},
+        `direction` = #{direction},
+        `stinger_code` = #{stingerCode},
+        `confirmer_id` = #{confirmerId},
+        `confirmer` = #{confirmer},
+        `confirm_time` = #{confirmTime},
+        `send_key_time` = #{sendKeyTime},
+        `give_power_time` = #{givePowerTime},
+        `b1_state` = #{b1State},
+        `b2_state` = #{b2State},
+        `power_off_time` = #{powerOffTime},
+        `outage_time` = #{outageTime},
+        `take_back_time` = #{takeBackTime},
+        `b1_state2` = #{b1State2},
+        `b2_state2` = #{b2State2},
+        `operator_id` = #{operatorId},
+        `operator_name` = #{operatorName},
+        `monitor_id` = #{monitorId},
+        `monitor_name` = #{monitorName},
+        `operator_id2` = #{operatorId2},
+        `operator_name2` = #{operatorName2},
+        `monitor_id2` = #{monitorId2},
+        `monitor_name2` = #{monitorName2}
+        WHERE ID = #{id}
+    </update>
+
+    <select id="query" parameterType="com.attiot.railAnaly.point.param.APointPleaseStingerQueryParam" resultMap="APointPleaseStinger">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_point_please_stinger
+        <include refid="where"/>
+        <include refid="basic"/>
+    </select>
+
+
+    <select id="getByParam" parameterType="com.attiot.railAnaly.point.param.APointPleaseStingerQueryParam" resultMap="APointPleaseStinger">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_point_please_stinger
+        <include refid="where"/>
+        LIMIT 1
+    </select>
+
+
+    <select id="getById" parameterType="String"  resultMap="APointPleaseStinger">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_point_please_stinger
+        <where>
+            ID = #{id}
+        </where>
+    </select>
+
+    <!--  根据请点ID 查询stinger 信息 begin -->
+    <select id="getByPointId" parameterType="String"  resultMap="APointPleaseStinger">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_point_please_stinger
+        <where>
+            please_point_id = #{pointId}
+        </where>
+    </select>
+    <!--  根据请点ID 查询stinger 信息 end -->
+
+    <select id="queryCount" parameterType="com.attiot.railAnaly.point.param.APointPleaseStingerQueryParam" resultType="Long">
+        SELECT COUNT(0)
+        FROM a_point_please_stinger
+        <include refid="where"/>
+    </select>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM a_point_please_stinger WHERE ID = #{id}
+    </delete>
+
+    <sql id="column">
+        `please_point_id`,
+        `place`,
+        `direction`,
+        `stinger_code`,
+        `confirmer_id`,
+        `confirmer`,
+        `confirm_time`,
+        send_key_time,
+        `give_power_time`,
+        `b1_state`,
+        `b2_state`,
+        `power_off_time`,
+        `outage_time`,
+        `take_back_time`,
+        `b1_state2`,
+        `b2_state2`,
+        `operator_id`,
+        `operator_name`,
+        `monitor_id`,
+        `monitor_name`,
+        `operator_id2`,
+        `operator_name2`,
+        `monitor_id2`,
+        `monitor_name2`
+    </sql>
+
+    <sql id="columnTable">
+        a_point_please_stinger.`please_point_id`,
+        a_point_please_stinger.`place`,
+        a_point_please_stinger.`direction`,
+        a_point_please_stinger.`stinger_code`,
+        a_point_please_stinger.`confirmer_id`,
+        a_point_please_stinger.`confirmer`,
+        a_point_please_stinger.`confirm_time`,
+        a_point_please_stinger.`send_key_time`,
+        a_point_please_stinger.`give_power_time`,
+        a_point_please_stinger.`b1_state`,
+        a_point_please_stinger.`b2_state`,
+        a_point_please_stinger.`power_off_time`,
+        a_point_please_stinger.`operator_id`,
+        a_point_please_stinger.`operator_name`,
+        a_point_please_stinger.`monitor_id`,
+        a_point_please_stinger.`monitor_name`,
+        a_point_please_stinger.`operator_id2`,
+        a_point_please_stinger.`operator_name2`,
+        a_point_please_stinger.`monitor_id2`,
+        a_point_please_stinger.`monitor_name2`
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id != null"> AND id = #{id}</if>
+            <if test="pleasePointId != null"> AND please_point_id = #{pleasePointId}</if>
+            <if test="place != null"> AND place = #{place}</if>
+            <if test="direction != null"> AND direction = #{direction}</if>
+            <if test="stingerCode != null"> AND stinger_code = #{stingerCode}</if>
+            <if test="confirmer != null"> AND confirmer = #{confirmer}</if>
+            <if test="confirmTime != null"> AND confirm_time = #{confirmTime}</if>
+            <if test="givePowerTime != null"> AND give_power_time = #{givePowerTime}</if>
+            <if test="b1State != null"> AND b1_state = #{b1State}</if>
+            <if test="b2State != null"> AND b2_state = #{b2State}</if>
+        </where>
+    </sql>
+
+    <sql id="basic">
+        <if test="column != null">
+            ORDER BY #{column} #{sort}
+        </if>
+        <if test="pageNo != -1">
+            LIMIT #{startIndex},#{pageSize}
+        </if>
+        <if test="pageNo == -1 and limit != -1">
+            LIMIT #{limit}
+        </if>
+        <if test="lock">
+            <if test="lockMode == 0">
+                FOR UPDATE
+            </if>
+            <if test="lockMode == 1">
+                LOCK IN SHARE MODE
+            </if>
+        </if>
+    </sql>
+</mapper>

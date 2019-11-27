@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.base.dao.TSBaseUserDao">
+	<resultMap id="TSBaseUser" type="com.attiot.railAnaly.base.entity.TSBaseUser">
+		<id property="id" column="ID" javaType="String" jdbcType="VARCHAR"/>
+		<result property="activitisync" column="activitiSync" javaType="Integer" jdbcType="SMALLINT"/>
+		<result property="browser" column="browser" javaType="String" jdbcType="VARCHAR"/>
+		<result property="password" column="password" javaType="String" jdbcType="VARCHAR"/>
+		<result property="realname" column="realname" javaType="String" jdbcType="VARCHAR"/>
+		<result property="signature" column="signature" javaType="String" jdbcType="VARCHAR"/>
+		<result property="status" column="status" javaType="Integer" jdbcType="SMALLINT"/>
+		<result property="userkey" column="userkey" javaType="String" jdbcType="VARCHAR"/>
+		<result property="username" column="username" javaType="String" jdbcType="VARCHAR"/>
+		<result property="departid" column="departid" javaType="String" jdbcType="VARCHAR"/>
+		<result property="deleteFlag" column="delete_flag" javaType="Integer" jdbcType="SMALLINT"/>
+
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.attiot.railAnaly.base.entity.TSBaseUser">
+		INSERT INTO t_s_base_user
+		(
+			id,
+			<include refid="column" />
+		) VALUES (
+			#{id,jdbcType=VARCHAR},
+			#{activitisync,jdbcType=SMALLINT},
+			#{browser,jdbcType=VARCHAR},
+			#{password,jdbcType=VARCHAR},
+			#{realname,jdbcType=VARCHAR},
+			#{signature,jdbcType=BLOB},
+			#{status,jdbcType=SMALLINT},
+			#{userkey,jdbcType=VARCHAR},
+			#{username,jdbcType=VARCHAR},
+			#{departid,jdbcType=VARCHAR},
+			#{deleteFlag,jdbcType=SMALLINT}
+		)
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT REPLACE(UUID(),'-','')
+		</selectKey>
+	</insert>
+
+	<update id="update" parameterType="com.attiot.railAnaly.base.entity.TSBaseUser">
+		UPDATE t_s_base_user
+		SET
+			`activitiSync` = #{activitisync},
+			`browser` = #{browser},
+			`password` = #{password},
+			`realname` = #{realname},
+			`signature` = #{signature},
+			`status` = #{status},
+			`userkey` = #{userkey},
+			`username` = #{username},
+			`departid` = #{departid},
+			`delete_flag` = #{deleteFlag}
+		WHERE ID = #{id}
+	</update>
+
+	<delete id="delete" parameterType="String">
+		DELETE FROM t_s_base_user WHERE ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="String" resultMap="TSBaseUser">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM t_s_base_user
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+
+
+	<select id="getByIds" parameterType="String" resultMap="TSBaseUser">
+		SELECT
+		ID,
+		<include refid="column" />
+		FROM t_s_base_user
+		<where>
+			find_in_set(ID , #{ids})>0
+		</where>
+	</select>
+
+
+
+
+
+	<select id="getTSBaseUserListByDepartId" parameterType="String" resultMap="TSBaseUser">
+		SELECT t1.* FROM
+		  t_s_base_user t1, t_s_user_org t2
+		WHERE
+		  t1.id = t2.user_id
+		  AND t2.org_id = #{departId}
+	</select>
+
+
+
+	<select id="getByParam" parameterType="com.attiot.railAnaly.base.param.TSBaseUserQueryParam" resultMap="TSBaseUser">
+		SELECT ID,
+		<include refid="column" />
+		FROM t_s_base_user
+		<include refid="where" />
+		LIMIT 1
+	</select>
+
+
+	<select id="getTSBaseUserListByRoleCode" parameterType="String"	resultMap="TSBaseUser">
+		select t.id,t.realname,t.username from t_s_base_user t
+		 where t.id IN(select distinct userid from t_s_role_user t1,t_s_role t2 where t1.roleid = t2.id and find_in_set(t2.rolecode,#{roleCode})>0)
+	</select>
+	<select id="getByRoleCodeAndDepartId" parameterType="Map"	resultMap="TSBaseUser">
+		SELECT a.*
+FROM
+  t_s_base_user a, t_s_role_user b, t_s_user_org c
+WHERE
+  a.id = b.userid
+  AND b.roleid IN (SELECT id
+                   FROM
+                     t_s_role
+                   WHERE
+                     rolecode = #{roleCode})
+  AND a.id = c.user_id
+  AND c.org_id = #{departId}
+
+	</select>
+
+
+
+	<select id="getGroupManagerByUserId" parameterType="String"	resultMap="TSBaseUser">
+		SELECT t.*
+                        FROM
+                          t_s_base_user t
+                        WHERE
+                          t.id IN (SELECT DISTINCT t1.user_id
+                                   FROM
+                                     t_s_user_org t1, t_s_user_org t2
+                                   WHERE
+                                     t1.org_id = t2.org_id
+                                     AND t2.user_id = #{userId})
+                          AND t.id IN (SELECT distinct t2.userid
+                                       FROM
+                                         t_s_role t1, t_s_role_user t2
+                                       WHERE
+                                         t1.rolecode = '1040'
+                                         AND t1.ID = t2.roleid)
+	</select>
+	<select id="query" parameterType="com.attiot.railAnaly.base.param.TSBaseUserQueryParam"	resultMap="TSBaseUser">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM t_s_base_user
+		<include refid="where" />
+		<include refid="basic" />
+	</select>
+
+	<select id="queryCount" parameterType="com.attiot.railAnaly.base.param.TSBaseUserQueryParam" resultType="Long">
+		SELECT COUNT(0)
+		FROM t_s_base_user
+		<include refid="where" />
+	</select>
+
+	<sql id="column">
+		`activitiSync`,
+		`browser`,
+		`password`,
+		`realname`,
+		`signature`,
+		`status`,
+		`userkey`,
+		`username`,
+		`departid`,
+		`delete_flag`
+	</sql>
+
+	<sql id="columnTable">
+		t_s_base_user.`activitiSync`,
+		t_s_base_user.`browser`,
+		t_s_base_user.`password`,
+		t_s_base_user.`realname`,
+		t_s_base_user.`signature`,
+		t_s_base_user.`status`,
+		t_s_base_user.`userkey`,
+		t_s_base_user.`username`,
+		t_s_base_user.`departid`,
+		t_s_base_user.`delete_flag`
+	</sql>
+
+	<sql id="where">
+		<where>
+			<if test="id != null"> AND ID = #{id}</if>
+			<if test="activitisync != null"> AND activitiSync = #{activitisync}</if>
+			<if test="browser != null"> AND browser = #{browser}</if>
+			<if test="password != null"> AND password = #{password}</if>
+			<if test="realname != null"> AND realname = #{realname}</if>
+			<if test="signature != null"> AND signature = #{signature}</if>
+			<if test="status != null"> AND status = #{status}</if>
+			<if test="userkey != null"> AND userkey = #{userkey}</if>
+			<if test="username != null"> AND username = #{username}</if>
+			<if test="departid != null"> AND departid = #{departid}</if>
+			<if test="deleteFlag != null"> AND delete_flag = #{deleteFlag}</if>
+		</where>
+	</sql>
+
+	<sql id="basic">
+		<if test="column != null">ORDER BY #{column} #{sort}</if>
+		<if test="pageNo != -1">LIMIT #{startIndex}, #{pageSize}</if>
+		<if test="pageNo == -1 and limit != -1">LIMIT #{limit}</if>
+		<if test="lock">
+			<if test="lockMode == 0">FOR UPDATE</if>
+			<if test="lockMode == 1">LOCK IN SHARE MODE</if>
+		</if>
+	</sql>
+</mapper>

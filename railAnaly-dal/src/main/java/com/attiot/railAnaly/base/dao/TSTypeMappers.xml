@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.base.dao.TSTypeDao">
+	<resultMap id="TSType" type="com.attiot.railAnaly.base.entity.TSType">
+		<id property="id" column="ID" javaType="String" jdbcType="VARCHAR"/>
+		<result property="typecode" column="typecode" javaType="String" jdbcType="VARCHAR"/>
+		<result property="typename" column="typename" javaType="String" jdbcType="VARCHAR"/>
+		<result property="typepid" column="typepid" javaType="String" jdbcType="VARCHAR"/>
+		<result property="typegroupid" column="typegroupid" javaType="String" jdbcType="VARCHAR"/>
+		<result property="createDate" column="create_date" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="createName" column="create_name" javaType="String" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.attiot.railAnaly.base.entity.TSType">
+		INSERT INTO t_s_type
+		(
+			id,
+			<include refid="column" />
+		) VALUES (
+			#{id,jdbcType=VARCHAR},
+			#{typecode,jdbcType=VARCHAR},
+			#{typename,jdbcType=VARCHAR},
+			#{typepid,jdbcType=VARCHAR},
+			#{typegroupid,jdbcType=VARCHAR},
+			#{createDate,jdbcType=TIMESTAMP},
+			#{createName,jdbcType=VARCHAR}
+		)
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT REPLACE(UUID(),'-','')
+		</selectKey>
+	</insert>
+
+	<update id="update" parameterType="com.attiot.railAnaly.base.entity.TSType">
+		UPDATE t_s_type
+		SET
+			`typecode` = #{typecode},
+			`typename` = #{typename},
+			`typepid` = #{typepid},
+			`typegroupid` = #{typegroupid},
+			`create_date` = #{createDate},
+			`create_name` = #{createName}
+		WHERE ID = #{id}
+	</update>
+
+	<delete id="delete" parameterType="String">
+		DELETE FROM t_s_type WHERE ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="String" resultMap="TSType">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM t_s_type
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+
+	<select id="GetListByGroupCode" parameterType="String" resultMap="TSType">
+		SELECT
+		ID,
+		<include refid="column" />
+		FROM t_s_type
+		<where>
+			typegroupid IN  (select ID from t_s_typegroup where typegroupcode=#{groupCode} )
+		</where>
+	</select>
+
+	<select id="getByParam" parameterType="com.attiot.railAnaly.base.param.TSTypeQueryParam" resultMap="TSType">
+		SELECT ID,
+		<include refid="column" />
+		FROM t_s_type
+		<include refid="where" />
+		LIMIT 1
+	</select>
+
+	<select id="query" parameterType="com.attiot.railAnaly.base.param.TSTypeQueryParam"	resultMap="TSType">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM t_s_type
+		<include refid="where" />
+	</select>
+
+	<select id="queryCount" parameterType="com.attiot.railAnaly.base.param.TSTypeQueryParam" resultType="Long">
+		SELECT COUNT(0)
+		FROM t_s_type
+		<include refid="where" />
+	</select>
+
+	<select id="queryListByCode" parameterType="String"	resultMap="TSType">
+		select * from t_s_type where typegroupid in(
+				select id  from t_s_typegroup where typegroupcode = #{code} )
+
+
+	</select>
+
+	<select id="queryMutiListByCode" parameterType="String"	resultMap="TSType">
+		SELECT
+			t.typecode,
+			m.lang_context as typename
+		FROM
+			t_s_type t
+			LEFT JOIN t_s_muti_lang m on t.typename = m.lang_key and m.lang_code='zh-cn'
+		WHERE
+			typegroupid IN (
+				SELECT
+					id
+				FROM
+					t_s_typegroup
+				WHERE
+					typegroupcode = #{code}
+			)
+	</select>
+
+	<sql id="column">
+		`typecode`,
+		`typename`,
+		`typepid`,
+		`typegroupid`,
+		`create_date`,
+		`create_name`
+	</sql>
+
+	<sql id="columnTable">
+		t_s_type.`typecode`,
+		t_s_type.`typename`,
+		t_s_type.`typepid`,
+		t_s_type.`typegroupid`,
+		t_s_type.`create_date`,
+		t_s_type.`create_name`
+	</sql>
+
+	<sql id="where">
+		<where>
+			<if test="id != null"> AND ID = #{id}</if>
+			<if test="typecode != null"> AND typecode = #{typecode}</if>
+			<if test="typename != null"> AND typename = #{typename}</if>
+			<if test="typepid != null"> AND typepid = #{typepid}</if>
+			<if test="typegroupid != null"> AND typegroupid = #{typegroupid}</if>
+			<if test="createDate != null"> AND create_date = #{createDate}</if>
+			<if test="createName != null"> AND create_name = #{createName}</if>
+		</where>
+	</sql>
+
+	<sql id="basic">
+		<if test="column != null">ORDER BY #{column} #{sort}</if>
+		<if test="pageNo != -1">LIMIT #{startIndex}, #{pageSize}</if>
+		<if test="pageNo == -1 and limit != -1">LIMIT #{limit}</if>
+		<if test="lock">
+			<if test="lockMode == 0">FOR UPDATE</if>
+			<if test="lockMode == 1">LOCK IN SHARE MODE</if>
+		</if>
+	</sql>
+</mapper>

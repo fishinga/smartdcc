@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.point.dao.APointPleaseDao">
+    <resultMap id="APointPlease" type="com.attiot.railAnaly.point.entity.APointPlease">
+        <id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="createName" column="create_name" javaType="String" jdbcType="VARCHAR"/>
+        <result property="createBy" column="create_by" javaType="String" jdbcType="VARCHAR"/>
+        <result property="createDate" column="create_date" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="updateName" column="update_name" javaType="String" jdbcType="VARCHAR"/>
+        <result property="updateBy" column="update_by" javaType="String" jdbcType="VARCHAR"/>
+        <result property="updateDate" column="update_date" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="sysOrgCode" column="sys_org_code" javaType="String" jdbcType="VARCHAR"/>
+        <result property="sysCompanyCode" column="sys_company_code" javaType="String" jdbcType="VARCHAR"/>
+        <result property="bpmStatus" column="bpm_status" javaType="String" jdbcType="VARCHAR"/>
+        <result property="pointType" column="point_type" javaType="String" jdbcType="VARCHAR"/>
+        <result property="proposer" column="proposer" javaType="String" jdbcType="VARCHAR"/>
+        <result property="teams" column="teams" javaType="String" jdbcType="VARCHAR"/>
+        <result property="jobContent" column="job_content" javaType="String" jdbcType="VARCHAR"/>
+        <result property="workingTime" column="working_time" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="pointHours" column="point_hours" javaType="double" jdbcType="DOUBLE"/>
+        <result property="transferId" column="transfer_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="transferName" column="transfer_name" javaType="String" jdbcType="VARCHAR"/>
+        <result property="transferTime" column="transfer_time" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="saleTime" column="sale_time" javaType="Date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.attiot.railAnaly.point.entity.APointPlease">
+        INSERT INTO a_point_please
+        (
+        id,
+        <include refid="column"/>)
+        VALUES (
+        #{id},
+        #{createName,jdbcType=VARCHAR},
+        #{createBy,jdbcType=VARCHAR},
+        #{createDate,jdbcType=TIMESTAMP},
+        #{updateName,jdbcType=VARCHAR},
+        #{updateBy,jdbcType=VARCHAR},
+        #{updateDate,jdbcType=TIMESTAMP},
+        #{sysOrgCode,jdbcType=VARCHAR},
+        #{sysCompanyCode,jdbcType=VARCHAR},
+        #{bpmStatus,jdbcType=VARCHAR},
+        #{pointType,jdbcType=VARCHAR},
+        #{proposer,jdbcType=VARCHAR},
+        #{teams,jdbcType=VARCHAR},
+        #{jobContent,jdbcType=VARCHAR},
+        #{workingTime,jdbcType=TIMESTAMP},
+        #{pointHours,jdbcType=DOUBLE},
+        #{transferId,jdbcType=VARCHAR},
+        #{transferName,jdbcType=VARCHAR},
+        #{transferTime,jdbcType=TIMESTAMP},
+        #{saleTime,jdbcType=TIMESTAMP}
+        )
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+            SELECT REPLACE(UUID(),'-','')
+        </selectKey>
+    </insert>
+
+    <update id="update" parameterType="com.attiot.railAnaly.point.entity.APointPlease">
+        UPDATE a_point_please
+        SET
+        `create_name` = #{createName},
+        `create_by` = #{createBy},
+        `create_date` = #{createDate},
+        `update_name` = #{updateName},
+        `update_by` = #{updateBy},
+        `update_date` = #{updateDate},
+        `sys_org_code` = #{sysOrgCode},
+        `sys_company_code` = #{sysCompanyCode},
+        `bpm_status` = #{bpmStatus},
+        `point_type` = #{pointType},
+        `proposer` = #{proposer},
+        `teams` = #{teams},
+        `job_content` = #{jobContent},
+        `working_time` = #{workingTime},
+        `point_hours` = #{pointHours},
+        `transfer_id` = #{transferId},
+        `transfer_name` = #{transferName},
+        `transfer_time` = #{transferTime},
+        `sale_time` = #{saleTime}
+        WHERE ID = #{id}
+    </update>
+
+    <select id="query" parameterType="com.attiot.railAnaly.point.param.APointPleaseQueryParam" resultMap="APointPlease">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_point_please
+        <include refid="where"/>
+        <include refid="basic"/>
+    </select>
+
+
+    <select id="getByParam" parameterType="com.attiot.railAnaly.point.param.APointPleaseQueryParam" resultMap="APointPlease">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_point_please
+        <include refid="where"/>
+        LIMIT 1
+    </select>
+
+
+    <select id="getById" parameterType="String"  resultMap="APointPlease">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_point_please
+        <where>
+            ID = #{id}
+        </where>
+    </select>
+
+
+    <select id="getPointList" parameterType="String"  resultType="Map">
+        SELECT
+        *
+        FROM
+        `a_point_please`  pp
+        <where>
+            (
+            pp.create_by = #{userId}
+            AND transfer_id IS NULL
+            AND pp.bpm_status = 3
+            )
+            OR (
+            pp.transfer_id = #{userId}
+            AND pp.bpm_status = 3)
+        </where>
+    </select>
+
+
+    <select id="getByIds" parameterType="String"  resultMap="APointPlease">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_point_please
+        <where>
+            find_in_set(id,#{ids})>0
+        </where>
+    </select>
+
+    <select id="queryCount" parameterType="com.attiot.railAnaly.point.param.APointPleaseQueryParam" resultType="Long">
+        SELECT COUNT(0)
+        FROM a_point_please
+        <include refid="where"/>
+    </select>
+
+    <select id="queryUnfinishCount" parameterType="String" resultType="Long">
+        SELECT COUNT(0)
+        FROM a_point_please
+        where
+        (
+            (
+              create_by = #{userId}  and  (transfer_id = '' or transfer_id is null)
+            )
+            or transfer_id = #{userId}
+        )
+        and (bpm_status = '3' or bpm_status = '7')
+    </select>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM a_point_please WHERE ID = #{id}
+    </delete>
+
+    <sql id="column">
+        `create_name`,
+        `create_by`,
+        `create_date`,
+        `update_name`,
+        `update_by`,
+        `update_date`,
+        `sys_org_code`,
+        `sys_company_code`,
+        `bpm_status`,
+        `point_type`,
+        `proposer`,
+        `teams`,
+        `job_content`,
+        `working_time`,
+        `point_hours`,
+        `transfer_id`,
+        `transfer_name`,
+        `transfer_time`,
+        `sale_time`
+    </sql>
+
+    <sql id="columnTable">
+        a_point_please.`create_name`,
+        a_point_please.`create_by`,
+        a_point_please.`create_date`,
+        a_point_please.`update_name`,
+        a_point_please.`update_by`,
+        a_point_please.`update_date`,
+        a_point_please.`sys_org_code`,
+        a_point_please.`sys_company_code`,
+        a_point_please.`bpm_status`,
+        a_point_please.`point_type`,
+        a_point_please.`proposer`,
+        a_point_please.`teams`,
+        a_point_please.`job_content`,
+        a_point_please.`working_time`,
+        a_point_please.`point_hours`,
+        a_point_please.`transfer_id`,
+        a_point_please.`transfer_name`,
+        a_point_please.`transfer_time`,
+        a_point_please.`sale_time`
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id != null"> AND id = #{id}</if>
+            <if test="createName != null"> AND create_name = #{createName}</if>
+            <if test="createBy != null">
+                AND (
+                (
+                  create_by = #{createBy}  and  (transfer_id = '' or transfer_id is null)
+                )
+                or transfer_id = #{transferId}
+                )
+            </if>
+            <if test="createDate != null"> AND create_date = #{createDate}</if>
+            <if test="updateName != null"> AND update_name = #{updateName}</if>
+            <if test="updateBy != null"> AND update_by = #{updateBy}</if>
+            <if test="updateDate != null"> AND update_date = #{updateDate}</if>
+            <if test="sysOrgCode != null"> AND sys_org_code = #{sysOrgCode}</if>
+            <if test="sysCompanyCode != null"> AND sys_company_code = #{sysCompanyCode}</if>
+            <if test="bpmStatus != null and bpmStatus != '' ">
+              AND (bpm_status = #{bpmStatus} or bpm_status = '7')
+            </if>
+            <if test="pointType != null"> AND point_type = #{pointType}</if>
+            <if test="proposer != null"> AND proposer = #{proposer}</if>
+            <if test="teams != null"> AND teams = #{teams}</if>
+            <if test="jobContent != null"> AND job_content = #{jobContent}</if>
+            <if test="workingTime != null"> AND working_time = #{workingTime}</if>
+            <if test="pstatus != null"> AND FIND_IN_SET(bpm_status,#{pstatus}) </if>
+        </where>
+    </sql>
+
+    <sql id="basic">
+        <if test="column != null">
+            ORDER BY #{column} #{sort}
+        </if>
+        <if test="pageNo != -1">
+            LIMIT #{startIndex},#{pageSize}
+        </if>
+        <if test="pageNo == -1 and limit != -1">
+            LIMIT #{limit}
+        </if>
+        <if test="lock">
+            <if test="lockMode == 0">
+                FOR UPDATE
+            </if>
+            <if test="lockMode == 1">
+                LOCK IN SHARE MODE
+            </if>
+        </if>
+    </sql>
+</mapper>

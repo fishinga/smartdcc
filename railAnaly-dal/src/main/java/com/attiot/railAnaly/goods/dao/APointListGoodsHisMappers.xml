@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.goods.dao.APointListGoodsHisDao">
+	<resultMap id="APointListGoodsHis" type="com.attiot.railAnaly.goods.entity.APointListGoodsHis">
+		<id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="trainNo" column="train_no" javaType="String" jdbcType="VARCHAR"/>
+		<result property="goodsId" column="goods_id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="goodsCode" column="goods_code" javaType="String" jdbcType="VARCHAR"/>
+		<result property="goodsName" column="goods_name" javaType="String" jdbcType="VARCHAR"/>
+		<result property="createtime" column="createtime" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="creator" column="creator" javaType="String" jdbcType="VARCHAR"/>
+		<result property="modifor" column="modifor" javaType="String" jdbcType="VARCHAR"/>
+		<result property="modifytime" column="modifytime" javaType="Date" jdbcType="TIMESTAMP"/>
+
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.attiot.railAnaly.goods.entity.APointListGoodsHis">
+		INSERT INTO a_point_list_goods_his
+		(
+			id,
+			<include refid="column" />
+		) VALUES (
+			#{id,jdbcType=VARCHAR},
+			#{trainNo,jdbcType=VARCHAR},
+			#{goodsId,jdbcType=VARCHAR},
+			#{goodsCode,jdbcType=VARCHAR},
+			#{goodsName,jdbcType=VARCHAR},
+			#{createtime,jdbcType=TIMESTAMP},
+			#{creator,jdbcType=VARCHAR},
+			#{modifor,jdbcType=VARCHAR},
+			#{modifytime,jdbcType=TIMESTAMP}
+		)
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT REPLACE(UUID(),'-','')
+		</selectKey>
+	</insert>
+
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO a_point_list_goods_his
+		(id,<include refid="column"/>)
+		values
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			md5(uuid()),
+			#{item.trainNo,jdbcType=VARCHAR},
+			#{item.goodsId,jdbcType=VARCHAR},
+			#{item.goodsCode,jdbcType=VARCHAR},
+			#{item.goodsName,jdbcType=VARCHAR},
+			now(),
+			#{item.creator,jdbcType=VARCHAR},
+			#{item.creator,jdbcType=VARCHAR},
+			now()
+			)
+		</foreach>
+
+	</insert>
+
+
+	<insert id="create" parameterType="com.attiot.railAnaly.goods.entity.PointListGoods">
+		INSERT INTO a_point_list_goods_his
+		(
+		id,
+		`train_no`,
+		`goods_id`,
+		`goods_code`,
+		`goods_name`,
+		`createtime`,
+		`creator`
+		) VALUES (
+		#{id,jdbcType=VARCHAR},
+		#{trainNo,jdbcType=VARCHAR},
+		#{goodsId,jdbcType=VARCHAR},
+		#{goodsName,jdbcType=VARCHAR},
+		#{goodsCode,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{creator,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.attiot.railAnaly.goods.entity.APointListGoodsHis">
+		UPDATE a_point_list_goods_his
+		SET
+			`train_no` = #{trainNo},
+			`goods_id` = #{goodsId},
+			`goods_code` = #{goodsCode},
+			`goods_name` = #{goodsName},
+			`createtime` = #{createtime},
+			`creator` = #{creator},
+			`modifor` = #{modifor},
+			`modifytime` = #{modifytime}
+		WHERE ID = #{id}
+	</update>
+
+
+	<update id="updateModifor" parameterType="Map">
+		UPDATE a_point_list_goods_his
+		SET
+			`modifor` = #{modifor},
+			`modifytime` = now()
+		WHERE find_in_set(ID ,#{id})>0
+	</update>
+
+	<delete id="delete" parameterType="String">
+		DELETE FROM a_point_list_goods_his WHERE ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="String" resultMap="APointListGoodsHis">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM a_point_list_goods_his
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+
+	<select id="getByParam" parameterType="com.attiot.railAnaly.goods.param.APointListGoodsHisQueryParam" resultMap="APointListGoodsHis">
+		SELECT ID,
+		<include refid="column" />
+		FROM a_point_list_goods_his
+		<include refid="where" />
+		LIMIT 1
+	</select>
+
+	<select id="query" parameterType="com.attiot.railAnaly.goods.param.APointListGoodsHisQueryParam"	resultMap="APointListGoodsHis">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM a_point_list_goods_his
+		<include refid="where" />
+		<include refid="basic" />
+	</select>
+
+	<select id="queryCount" parameterType="com.attiot.railAnaly.goods.param.APointListGoodsHisQueryParam" resultType="Long">
+		SELECT COUNT(0)
+		FROM a_point_list_goods_his
+		<include refid="where" />
+	</select>
+
+	<sql id="column">
+		`train_no`,
+		`goods_id`,
+		`goods_code`,
+		`goods_name`,
+		`createtime`,
+		`creator`,
+		`modifor`,
+		`modifytime`
+	</sql>
+
+	<sql id="columnTable">
+		a_point_list_goods_his.`train_no`,
+		a_point_list_goods_his.`goods_id`,
+		a_point_list_goods_his.`goods_code`,
+		a_point_list_goods_his.`goods_name`,
+		a_point_list_goods_his.`createtime`,
+		a_point_list_goods_his.`creator`,
+		a_point_list_goods_his.`modifor`,
+		a_point_list_goods_his.`modifytime`
+	</sql>
+
+	<sql id="where">
+		<where>
+			<if test="id != null"> AND id = #{id}</if>
+			<if test="trainNo != null"> AND train_no = #{trainNo}</if>
+			<if test="goodsId != null"> AND goods_id = #{goodsId}</if>
+			<if test="goodsCode != null"> AND goods_code = #{goodsCode}</if>
+			<if test="goodsName != null"> AND goods_name = #{goodsName}</if>
+			<if test="createtime != null"> AND createtime = #{createtime}</if>
+			<if test="creator != null"> AND creator = #{creator}</if>
+			<if test="modifor != null"> AND modifor = #{modifor}</if>
+			<if test="modifytime != null"> AND modifytime = #{modifytime}</if>
+		</where>
+	</sql>
+
+	<sql id="basic">
+		<if test="column != null">ORDER BY #{column} #{sort}</if>
+		<if test="pageNo != -1">LIMIT #{startIndex}, #{pageSize}</if>
+		<if test="pageNo == -1 and limit != -1">LIMIT #{limit}</if>
+		<if test="lock">
+			<if test="lockMode == 0">FOR UPDATE</if>
+			<if test="lockMode == 1">LOCK IN SHARE MODE</if>
+		</if>
+	</sql>
+</mapper>

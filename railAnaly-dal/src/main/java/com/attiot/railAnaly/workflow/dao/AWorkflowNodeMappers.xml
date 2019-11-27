@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.workflow.dao.AWorkflowNodeDao">
+    <resultMap id="AWorkflowNode" type="com.attiot.railAnaly.workflow.entity.AWorkflowNode">
+        <id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="processId" column="process_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="nodeCode" column="node_code" javaType="String" jdbcType="VARCHAR"/>
+        <result property="nodeName" column="node_name" javaType="String" jdbcType="VARCHAR"/>
+        <result property="ntype" column="ntype" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="nodeSort" column="node_sort" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="assignType" column="assign_type" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="assginIds" column="assgin_ids" javaType="String" jdbcType="VARCHAR"/>
+        <result property="auditMode" column="audit_mode" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="autoRun" column="auto_run" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="autoRunAfterHour" column="auto_run_after_hour" javaType="Integer" jdbcType="INTEGER"/>
+        <result property="dataAuth" column="data_auth" javaType="String" jdbcType="LONGVARCHAR"/>
+        <result property="passNodeId" column="pass_node_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="passExpress" column="pass_express" javaType="String" jdbcType="LONGVARCHAR"/>
+        <result property="notpassNodeId" column="notpass_node_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="notpassExpress" column="notpass_express" javaType="String" jdbcType="LONGVARCHAR"/>
+        <result property="remarks" column="remarks" javaType="String" jdbcType="VARCHAR"/>
+        <result property="creator" column="creator" javaType="String" jdbcType="VARCHAR"/>
+        <result property="createtime" column="createtime" javaType="Date" jdbcType="TIMESTAMP"/>
+        <result property="modifor" column="modifor" javaType="String" jdbcType="VARCHAR"/>
+        <result property="modifytime" column="modifytime" javaType="Date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="query" parameterType="com.attiot.railAnaly.workflow.param.AWorkflowNodeQueryParam" resultMap="AWorkflowNode">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_workflow_node
+        <include refid="where"/>
+        <include refid="basic"/>
+    </select>
+
+
+    <select id="getByParam" parameterType="com.attiot.railAnaly.workflow.param.AWorkflowNodeQueryParam" resultMap="AWorkflowNode">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_workflow_node
+        <include refid="where"/>
+        LIMIT 1
+    </select>
+
+    <select id="getById" parameterType="Integer"  resultMap="AWorkflowNode">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_workflow_node
+        <where>
+            ID = #{id}
+        </where>
+    </select>
+
+    <!--  根据流程ID查询 节点信息  begin  -->
+    <select id="getByProcessIdAndNtype"  resultMap="AWorkflowNode">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_workflow_node
+        <where>
+            process_id = #{processId}
+            and ntype = #{ntype}
+        </where>
+    </select>
+    <!--  根据流程ID查询 节点信息  end  -->
+
+    <select id="getNodeByProcessAndNtype" parameterType="Map" resultMap="AWorkflowNode">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_workflow_node
+        where
+        process_id = #{processId}
+        and ntype=#{ntype}
+    </select>
+
+
+    <select id="queryCount" parameterType="com.attiot.railAnaly.workflow.param.AWorkflowNodeQueryParam" resultType="Long">
+        SELECT COUNT(0)
+        FROM a_workflow_node
+        <include refid="where"/>
+    </select>
+
+    <sql id="column">
+        `process_id`,
+        `node_code`,
+        `node_name`,
+        `ntype`,
+        `node_sort`,
+        `assign_type`,
+        `assgin_ids`,
+        `audit_mode`,
+        `auto_run`,
+        `auto_run_after_hour`,
+        `data_auth`,
+        `pass_node_id`,
+        `pass_express`,
+        `notpass_node_id`,
+        `notpass_express`,
+        `remarks`,
+        `creator`,
+        `createtime`,
+        `modifor`,
+        `modifytime`
+    </sql>
+
+    <sql id="columnTable">
+        a_workflow_node.`process_id`,
+        a_workflow_node.`node_code`,
+        a_workflow_node.`node_name`,
+        a_workflow_node.`ntype`,
+        a_workflow_node.`node_sort`,
+        a_workflow_node.`assign_type`,
+        a_workflow_node.`assgin_ids`,
+        a_workflow_node.`audit_mode`,
+        a_workflow_node.`auto_run`,
+        a_workflow_node.`auto_run_after_hour`,
+        a_workflow_node.`data_auth`,
+        a_workflow_node.`pass_node_id`,
+        a_workflow_node.`pass_express`,
+        a_workflow_node.`notpass_node_id`,
+        a_workflow_node.`notpass_express`,
+        a_workflow_node.`remarks`,
+        a_workflow_node.`creator`,
+        a_workflow_node.`createtime`,
+        a_workflow_node.`modifor`,
+        a_workflow_node.`modifytime`
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id != null"> AND id = #{id}</if>
+            <if test="processId != null"> AND process_id = #{processId}</if>
+            <if test="nodeCode != null"> AND node_code = #{nodeCode}</if>
+            <if test="nodeName != null"> AND node_name = #{nodeName}</if>
+            <if test="ntype != null"> AND ntype = #{ntype}</if>
+            <if test="nodeSort != null"> AND node_sort = #{nodeSort}</if>
+            <if test="assignType != null"> AND assign_type = #{assignType}</if>
+            <if test="assginIds != null"> AND assgin_ids = #{assginIds}</if>
+            <if test="auditMode != null"> AND audit_mode = #{auditMode}</if>
+            <if test="autoRun != null"> AND auto_run = #{autoRun}</if>
+            <if test="autoRunAfterHour != null"> AND auto_run_after_hour = #{autoRunAfterHour}</if>
+            <if test="dataAuth != null"> AND data_auth = #{dataAuth}</if>
+            <if test="passNodeId != null"> AND pass_node_id = #{passNodeId}</if>
+            <if test="passExpress != null"> AND pass_express = #{passExpress}</if>
+            <if test="notpassNodeId != null"> AND notpass_node_id = #{notpassNodeId}</if>
+            <if test="notpassExpress != null"> AND notpass_express = #{notpassExpress}</if>
+            <if test="remarks != null"> AND remarks = #{remarks}</if>
+            <if test="creator != null"> AND creator = #{creator}</if>
+            <if test="createtime != null"> AND createtime = #{createtime}</if>
+            <if test="modifor != null"> AND modifor = #{modifor}</if>
+            <if test="modifytime != null"> AND modifytime = #{modifytime}</if>
+        </where>
+    </sql>
+
+    <sql id="basic">
+        <if test="column != null">
+            ORDER BY #{column} #{sort}
+        </if>
+        <if test="pageNo != -1">
+            LIMIT #{startIndex},#{pageSize}
+        </if>
+        <if test="pageNo == -1 and limit != -1">
+            LIMIT #{limit}
+        </if>
+        <if test="lock">
+            <if test="lockMode == 0">
+                FOR UPDATE
+            </if>
+            <if test="lockMode == 1">
+                LOCK IN SHARE MODE
+            </if>
+        </if>
+    </sql>
+</mapper>

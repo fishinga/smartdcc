@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.metro.dao.APerformanceActualhoursDao">
+    <resultMap id="APerformanceActualhours" type="com.attiot.railAnaly.metro.entity.APerformanceActualhours">
+        <id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="departId" column="depart_id" javaType="String" jdbcType="VARCHAR"/>
+        <result property="yearmonth" column="yearmonth" javaType="String" jdbcType="VARCHAR"/>
+        <result property="actualHours" column="actual_hours" javaType="Double" jdbcType="DECIMAL"/>
+        <result property="creator" column="creator" javaType="String" jdbcType="VARCHAR"/>
+        <result property="createtime" column="createtime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        <result property="modifor" column="modifor" javaType="String" jdbcType="VARCHAR"/>
+        <result property="modifytime" column="modifytime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.attiot.railAnaly.metro.entity.APerformanceActualhours">
+        INSERT INTO a_performance_actualhours
+        (id,<include refid="column"/>)
+        VALUES (
+        md5(uuid()),
+        #{userId,jdbcType=VARCHAR},
+    #{departId,jdbcType=VARCHAR},
+    #{yearmonth,jdbcType=VARCHAR},
+    #{actualHours,jdbcType=DECIMAL},
+    #{creator,jdbcType=VARCHAR},
+        now(),
+    #{modifor,jdbcType=VARCHAR},
+        now()
+        )
+
+    </insert>
+
+    <update id="update" parameterType="com.attiot.railAnaly.metro.entity.APerformanceActualhours">
+        UPDATE a_performance_actualhours
+        SET
+        `user_id` = #{userId},
+        `depart_id` = #{departId},
+        `yearmonth` = #{yearmonth},
+        `actual_hours` = #{actualHours},
+        `modifor` = #{modifor},
+        `modifytime` =  now()
+        WHERE ID = #{id}
+    </update>
+
+    <select id="query" parameterType="com.attiot.railAnaly.metro.param.APerformanceActualhoursQueryParam" resultMap="APerformanceActualhours">
+        SELECT t.ID,
+        t.`user_id`,
+        t.`depart_id`,
+        t.`yearmonth`,
+        t.`actual_hours`,
+        t.`creator`,
+        t.`createtime`,
+        t.`modifor`,
+        t.`modifytime`,
+        u.name as userName,
+        d.departname as departName
+        FROM a_performance_actualhours t
+        LEFT JOIN a_metro_user_info u on u.id = t.user_id
+        LEFT JOIN t_s_depart d on t.depart_id = d.ID
+        <include refid="where"/>
+        <include refid="basic"/>
+    </select>
+
+
+    <select id="getByParam" parameterType="com.attiot.railAnaly.metro.param.APerformanceActualhoursQueryParam" resultMap="APerformanceActualhours">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_performance_actualhours t
+        <include refid="where"/>
+        LIMIT 1
+    </select>
+
+
+    <select id="getById" parameterType="String"  resultMap="APerformanceActualhours">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_performance_actualhours
+        <where>
+            ID = #{id}
+        </where>
+    </select>
+
+    <select id="queryCount" parameterType="com.attiot.railAnaly.metro.param.APerformanceActualhoursQueryParam" resultType="Long">
+        SELECT COUNT(0)
+        FROM a_performance_actualhours t
+        LEFT JOIN a_metro_user_info u on u.id = t.user_id
+        <include refid="where"/>
+    </select>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM a_performance_actualhours WHERE ID = #{id}
+    </delete>
+
+    <sql id="column">
+        `user_id`,
+        `depart_id`,
+        `yearmonth`,
+        `actual_hours`,
+        `creator`,
+        `createtime`,
+        `modifor`,
+        `modifytime`
+    </sql>
+
+    <sql id="columnTable">
+        a_performance_actualhours.`user_id`,
+        a_performance_actualhours.`depart_id`,
+        a_performance_actualhours.`yearmonth`,
+        a_performance_actualhours.`actual_hours`,
+        a_performance_actualhours.`creator`,
+        a_performance_actualhours.`createtime`,
+        a_performance_actualhours.`modifor`,
+        a_performance_actualhours.`modifytime`
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id != null"> AND t.id = #{id}</if>
+            <if test="userId != null"> AND t.user_id = #{userId}</if>
+            <if test="departId != null and departId != ''"> AND t.depart_id = #{departId}</if>
+            <if test="yearmonth != null and yearmonth != ''"> AND t.yearmonth = #{yearmonth}</if>
+            <if test="actualHours != null"> AND t.actual_hours = #{actualHours}</if>
+            <if test="creator != null"> AND t.creator = #{creator}</if>
+            <if test="createtime != null"> AND t.createtime = #{createtime}</if>
+            <if test="modifor != null"> AND t.modifor = #{modifor}</if>
+            <if test="modifytime != null"> AND t.modifytime = #{modifytime}</if>
+            <if test="userName != null and userName !=''"> AND u.name LIKE CONCAT('%',#{userName},'%')</if>
+        </where>
+    </sql>
+
+    <sql id="basic">
+        <if test="column != null">
+            ORDER BY #{column} #{sort}
+        </if>
+        <if test="pageNo != -1">
+            LIMIT #{startIndex},#{pageSize}
+        </if>
+        <if test="pageNo == -1 and limit != -1">
+            LIMIT #{limit}
+        </if>
+        <if test="lock">
+            <if test="lockMode == 0">
+                FOR UPDATE
+            </if>
+            <if test="lockMode == 1">
+                LOCK IN SHARE MODE
+            </if>
+        </if>
+    </sql>
+</mapper>

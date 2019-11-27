@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.fault.dao.AFaultInfoDao">
+    <resultMap id="AFaultInfo" type="com.attiot.railAnaly.fault.entity.AFaultInfo">
+        <id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+<result property="reporter" column="reporter" javaType="String" jdbcType="VARCHAR"/>
+<result property="reporterDeptId" column="reporter_dept_id" javaType="String" jdbcType="VARCHAR"/>
+<result property="reportTime" column="report_time" javaType="String" jdbcType="VARCHAR"/>
+<result property="faultTime" column="fault_time" javaType="String" jdbcType="VARCHAR"/>
+<result property="faultDepart" column="fault_depart" javaType="String" jdbcType="VARCHAR"/>
+<result property="trainNo" column="train_no" javaType="String" jdbcType="VARCHAR"/>
+<result property="trainUnit" column="train_unit" javaType="String" jdbcType="VARCHAR"/>
+<result property="carriageNo" column="carriage_no" javaType="String" jdbcType="VARCHAR"/>
+<result property="faultContents" column="fault_contents" javaType="String" jdbcType="LONGVARCHAR"/>
+<result property="trainMiles" column="train_miles" javaType="float" jdbcType="DECIMAL"/>
+<result property="faultJob" column="fault_job" javaType="Integer" jdbcType="INTEGER"/>
+<result property="faultJobDetail" column="fault_job_detail" javaType="Integer" jdbcType="INTEGER"/>
+<result property="faultLevel" column="fault_level" javaType="String" jdbcType="VARCHAR"/>
+<result property="faultState" column="fault_state" javaType="Integer" jdbcType="INTEGER"/>
+<result property="coeDiff" column="coe_diff" javaType="Float" jdbcType="DECIMAL"/>
+<result property="attachPath" column="attach_path" javaType="String" jdbcType="VARCHAR"/>
+<result property="creator" column="creator" javaType="String" jdbcType="VARCHAR"/>
+<result property="createtime" column="createtime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+<result property="modifor" column="modifor" javaType="String" jdbcType="VARCHAR"/>
+<result property="modifytime" column="modifytime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+<result property="jobRule" column="job_rule" javaType="Integer" jdbcType="INTEGER"/>
+<result property="parentTaskId" column="parent_task_id" javaType="String" jdbcType="VARCHAR"/>
+<result property="deleted" column="deleted" javaType="Integer" jdbcType="INTEGER"/>
+
+    </resultMap>
+    <insert id="insert" parameterType="com.attiot.railAnaly.fault.entity.AFaultInfo">
+        INSERT INTO a_fault_info
+        (id,<include refid="column"/>)
+        VALUES (
+        #{id},
+        #{reporter,jdbcType=VARCHAR},
+        #{reporterDeptId,jdbcType=VARCHAR},
+        date_format(now(),'%Y-%m-%d %T'),
+        #{faultTime,jdbcType=VARCHAR},
+        #{faultDepart,jdbcType=VARCHAR},
+        #{trainNo,jdbcType=VARCHAR},
+        #{trainUnit,jdbcType=VARCHAR},
+        #{carriageNo,jdbcType=VARCHAR},
+        #{faultContents},
+        #{trainMiles,jdbcType=DECIMAL},
+        #{faultJob,jdbcType=INTEGER},
+        #{faultJobDetail,jdbcType=INTEGER},
+        #{faultLevel,jdbcType=VARCHAR},
+        #{faultState},
+        #{coeDiff},
+        #{attachPath,jdbcType=VARCHAR},
+        #{creator,jdbcType=VARCHAR},
+        now(),
+        #{modifor,jdbcType=VARCHAR},
+        now(),
+        #{jobRule,jdbcType=INTEGER},
+        #{parentTaskId,jdbcType=VARCHAR},
+        0
+        )
+
+    </insert>
+
+    <update id="update" parameterType="com.attiot.railAnaly.fault.entity.AFaultInfo">
+        UPDATE a_fault_info
+        SET
+        `reporter` = #{reporter},
+    `reporter_dept_id` = #{reporterDeptId},
+    `fault_time` = #{faultTime},
+    `fault_depart` = #{faultDepart},
+    `train_no` = #{trainNo},
+    `train_unit` = #{trainUnit},
+    `carriage_no` = #{carriageNo},
+    `fault_contents` = #{faultContents},
+    `train_miles` = #{trainMiles},
+    `fault_job` = #{faultJob},
+    `fault_job_detail` = #{faultJobDetail},
+    `fault_level` = #{faultLevel},
+    `attach_path` = #{attachPath},
+    `modifor` = #{modifor},
+    `modifytime` = now()
+        WHERE ID = #{id}
+    </update>
+
+
+    <update id="updateFaultState" parameterType="Map">
+        UPDATE a_fault_info
+        SET
+        fault_state=#{faultState},
+        `modifor` = #{modifor},
+        `modifytime` = now()
+        WHERE ID = #{id}
+    </update>
+
+
+    <update id="updateFaultStateAndCoeDiff" parameterType="Map">
+        UPDATE a_fault_info
+        SET
+        fault_state=#{faultState},
+        coe_diff=#{coeDiff},
+        `modifor` = #{modifor},
+        `modifytime` = now()
+        WHERE ID = #{id}
+    </update>
+
+
+
+    <update id="updateFaultStateAndFaultLevel" parameterType="Map">
+        UPDATE a_fault_info
+        SET
+        fault_state=#{faultState},
+        fault_level=#{faultLevel},
+        `modifor` = #{modifor},
+        `modifytime` = now()
+        WHERE ID = #{id}
+    </update>
+
+    <select id="query" parameterType="com.attiot.railAnaly.fault.param.AFaultInfoQueryParam" resultMap="AFaultInfo">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_fault_info
+        where
+            deleted = 0
+            <if test="reporter != null and reporter!=''"> AND reporter =#{reporter}</if>
+            <if test="reporterDeptId != null  and reporterDeptId!=''"> AND reporter_dept_id in(SELECT id FROM t_s_depart where departname like CONCAT('%',#{reporterDeptId},'%'))</if>
+            <if test="faultDepart != null and faultDepart != ''"> AND fault_depart = #{faultDepart}</if>
+            <if test="trainNo != null and trainNo != ''"> AND train_no = #{trainNo}</if>
+            <if test="faultState != null and faultState!='' "> AND fault_state =#{faultState}</if>
+
+        <include refid="basic"/>
+    </select>
+
+
+    <select id="getUnfinishFaultInfoList" resultMap="AFaultInfo">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_fault_info
+        where
+        deleted = 0
+        and fault_state in(2,3,4) order by fault_time desc
+
+    </select>
+
+    <select id="getByParam" parameterType="com.attiot.railAnaly.fault.param.AFaultInfoQueryParam" resultMap="AFaultInfo">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_fault_info
+        <include refid="where"/>
+        LIMIT 1
+    </select>
+
+
+    <select id="getById" parameterType="String"  resultMap="AFaultInfo">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_fault_info
+        <where>
+            ID = #{id}
+        </where>
+    </select>
+
+    <select id="getByIds" parameterType="String"  resultMap="AFaultInfo">
+        SELECT ID,
+        <include refid="column"/>
+        FROM a_fault_info
+        <where>
+            find_in_set(ID ,#{ids})>0
+        </where>
+        order by fault_time desc
+    </select>
+
+
+
+
+
+    <select id="queryCount" parameterType="com.attiot.railAnaly.fault.param.AFaultInfoQueryParam" resultType="Long">
+        SELECT COUNT(0)
+        FROM a_fault_info
+        where
+        deleted = 0
+        <if test="reporter != null and reporter!=''"> AND reporter =#{reporter}</if>
+        <if test="reporterDeptId != null  and reporterDeptId!=''"> AND reporter_dept_id in(SELECT id FROM t_s_depart where departname like CONCAT('%',#{reporterDeptId},'%'))</if>
+        <if test="faultDepart != null and faultDepart != ''"> AND fault_depart = #{faultDepart}</if>
+        <if test="trainNo != null and trainNo != ''"> AND train_no = #{trainNo}</if>
+        <if test="faultState != null and faultState!='' "> AND fault_state =#{faultState}</if>
+    </select>
+
+    <delete id="delete" parameterType="String">
+        update a_fault_info set deleted=1 WHERE find_in_set(ID ,#{ids})>0
+    </delete>
+
+    <sql id="column">
+        `reporter`,
+    `reporter_dept_id`,
+    `report_time`,
+    `fault_time`,
+    `fault_depart`,
+    `train_no`,
+    `train_unit`,
+    `carriage_no`,
+    `fault_contents`,
+    `train_miles`,
+    `fault_job`,
+    `fault_job_detail`,
+    `fault_level`,
+    `fault_state`,
+    coe_diff,
+    `attach_path`,
+    `creator`,
+    `createtime`,
+    `modifor`,
+    `modifytime`,
+    `job_rule`,
+    `parent_task_id`,
+    `deleted`
+    </sql>
+
+    <sql id="columnTable">
+        a_fault_info.`reporter`,
+    a_fault_info.`reporter_dept_id`,
+    a_fault_info.`report_time`,
+    a_fault_info.`fault_time`,
+    a_fault_info.`fault_depart`,
+    a_fault_info.`train_no`,
+    a_fault_info.`train_unit`,
+    a_fault_info.`carriage_no`,
+    a_fault_info.`fault_contents`,
+    a_fault_info.`train_miles`,
+    a_fault_info.`fault_job`,
+    a_fault_info.`fault_job_detail`,
+    a_fault_info.`fault_level`,
+    a_fault_info.`fault_state`,
+    a_fault_info.`attach_path`,
+    a_fault_info.`creator`,
+    a_fault_info.`createtime`,
+    a_fault_info.`modifor`,
+    a_fault_info.`modifytime`,
+    a_fault_info.`job_rule`,
+    a_fault_info.`parent_task_id`,
+    a_fault_info.`deleted`
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="id != null"> AND id = #{id}</if>
+<if test="reporter != null"> AND reporter = #{reporter}</if>
+    <if test="reporterDeptId != null"> AND reporter_dept_id = #{reporterDeptId}</if>
+    <if test="reportTime != null"> AND report_time = #{reportTime}</if>
+    <if test="faultTime != null"> AND fault_time = #{faultTime}</if>
+    <if test="faultDepart != null"> AND fault_depart = #{faultDepart}</if>
+    <if test="trainNo != null"> AND train_no = #{trainNo}</if>
+    <if test="trainUnit != null"> AND train_unit = #{trainUnit}</if>
+    <if test="carriageNo != null"> AND carriage_no = #{carriageNo}</if>
+    <if test="faultContents != null"> AND fault_contents = #{faultContents}</if>
+    <if test="trainMiles != null"> AND train_miles = #{trainMiles}</if>
+    <if test="faultJob != null"> AND fault_job = #{faultJob}</if>
+    <if test="faultJobDetail != null"> AND fault_job_detail = #{faultJobDetail}</if>
+    <if test="faultLevel != null"> AND fault_level = #{faultLevel}</if>
+    <if test="faultState != null"> AND fault_state = #{faultState}</if>
+    <if test="attachPath != null"> AND attach_path = #{attachPath}</if>
+    <if test="creator != null"> AND creator = #{creator}</if>
+    <if test="createtime != null"> AND createtime = #{createtime}</if>
+    <if test="modifor != null"> AND modifor = #{modifor}</if>
+    <if test="modifytime != null"> AND modifytime = #{modifytime}</if>
+    <if test="jobRule != null"> AND job_rule = #{jobRule}</if>
+    <if test="parentTaskId != null"> AND parent_task_id = #{parentTaskId}</if>
+    <if test="deleted != null"> AND deleted = #{deleted}</if>
+        </where>
+    </sql>
+
+    <sql id="basic">
+        <if test="column != null">
+            ORDER BY #{column} #{sort}
+        </if>
+        <if test="pageNo != -1">
+            LIMIT #{startIndex},#{pageSize}
+        </if>
+        <if test="pageNo == -1 and limit != -1">
+            LIMIT #{limit}
+        </if>
+        <if test="lock">
+            <if test="lockMode == 0">
+                FOR UPDATE
+            </if>
+            <if test="lockMode == 1">
+                LOCK IN SHARE MODE
+            </if>
+        </if>
+    </sql>
+</mapper>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.point.dao.PointPleasePowerDao">
+	<resultMap id="PointPleasePower" type="com.attiot.railAnaly.point.entity.PointPleasePower">
+		<id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="pleasePointId" column="please_point_id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="stock" column="stock" javaType="String" jdbcType="VARCHAR"/>
+		<result property="appType" column="app_type" javaType="Integer" jdbcType="INTEGER"/>
+		<result property="creator" column="creator" javaType="String" jdbcType="VARCHAR"/>
+		<result property="createtime" column="createtime" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="modifor" column="modifor" javaType="String" jdbcType="VARCHAR"/>
+		<result property="modifytime" column="modifytime" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="operatorId" column="operator_id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="operatorName" column="operator_name" javaType="String" jdbcType="VARCHAR"/>
+		<result property="monitorId" column="monitor_id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="monitorName" column="monitor_name" javaType="String" jdbcType="VARCHAR"/>
+
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.attiot.railAnaly.point.entity.PointPleasePower">
+		INSERT INTO a_point_please_power
+		(
+			id,
+			<include refid="column" />
+		) VALUES (
+			#{id,jdbcType=VARCHAR},
+			#{pleasePointId,jdbcType=VARCHAR},
+			#{stock,jdbcType=VARCHAR},
+			#{appType,jdbcType=INTEGER},
+			#{creator,jdbcType=VARCHAR},
+			#{createtime,jdbcType=TIMESTAMP},
+			#{modifor,jdbcType=VARCHAR},
+			#{modifytime,jdbcType=TIMESTAMP},
+			#{operatorId,jdbcType=VARCHAR},
+			#{operatorName,jdbcType=VARCHAR},
+			#{monitorId,jdbcType=VARCHAR},
+			#{monitorName,jdbcType=VARCHAR}
+		)
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT REPLACE(UUID(),'-','')
+		</selectKey>
+	</insert>
+
+	<update id="update" parameterType="com.attiot.railAnaly.point.entity.PointPleasePower">
+		UPDATE a_point_please_power
+		SET
+			`please_point_id` = #{pleasePointId},
+			`stock` = #{stock},
+			`app_type` = #{appType},
+			`creator` = #{creator},
+			`createtime` = #{createtime},
+			`modifor` = #{modifor},
+			`modifytime` = #{modifytime},
+			`operator_id` = #{operatorId},
+			`operator_name` = #{operatorName},
+			`monitor_id` = #{monitorId},
+			`monitor_name` = #{monitorName}
+		WHERE ID = #{id}
+	</update>
+
+	<delete id="delete" parameterType="String">
+		DELETE FROM a_point_please_power WHERE ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="String" resultMap="PointPleasePower">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM a_point_please_power
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+
+	<select id="getByPointId" parameterType="String" resultMap="PointPleasePower">
+		SELECT
+		ID,
+		<include refid="column" />
+		FROM a_point_please_power
+		<where>
+			please_point_id = #{pointId}
+		</where>
+	</select>
+
+	<select id="getByParam" parameterType="com.attiot.railAnaly.point.param.PointPleasePowerQueryParam" resultMap="PointPleasePower">
+		SELECT ID,
+		<include refid="column" />
+		FROM a_point_please_power
+		<include refid="where" />
+		LIMIT 1
+	</select>
+
+	<select id="query" parameterType="com.attiot.railAnaly.point.param.PointPleasePowerQueryParam"	resultMap="PointPleasePower">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM a_point_please_power
+		<include refid="where" />
+		<include refid="basic" />
+	</select>
+
+	<select id="queryCount" parameterType="com.attiot.railAnaly.point.param.PointPleasePowerQueryParam" resultType="Long">
+		SELECT COUNT(0)
+		FROM a_point_please_power
+		<include refid="where" />
+	</select>
+
+	<sql id="column">
+		`please_point_id`,
+		`stock`,
+		`app_type`,
+		`creator`,
+		`createtime`,
+		`modifor`,
+		`modifytime`,
+		`operator_id`,
+		`operator_name`,
+		`monitor_id`,
+		`monitor_name`
+	</sql>
+
+	<sql id="columnTable">
+		a_point_please_power.`please_point_id`,
+		a_point_please_power.`stock`,
+		a_point_please_power.`app_type`,
+		a_point_please_power.`creator`,
+		a_point_please_power.`createtime`,
+		a_point_please_power.`modifor`,
+		a_point_please_power.`modifytime`
+	</sql>
+
+	<sql id="where">
+		<where>
+			<if test="id != null"> AND id = #{id}</if>
+			<if test="pleasePointId != null"> AND please_point_id = #{pleasePointId}</if>
+			<if test="stock != null"> AND stock = #{stock}</if>
+			<if test="appType != null"> AND app_type = #{appType}</if>
+			<if test="creator != null"> AND creator = #{creator}</if>
+			<if test="createtime != null"> AND createtime = #{createtime}</if>
+			<if test="modifor != null"> AND modifor = #{modifor}</if>
+			<if test="modifytime != null"> AND modifytime = #{modifytime}</if>
+		</where>
+	</sql>
+
+	<sql id="basic">
+		<if test="column != null">ORDER BY #{column} #{sort}</if>
+		<if test="pageNo != -1">LIMIT #{startIndex}, #{pageSize}</if>
+		<if test="pageNo == -1 and limit != -1">LIMIT #{limit}</if>
+		<if test="lock">
+			<if test="lockMode == 0">FOR UPDATE</if>
+			<if test="lockMode == 1">LOCK IN SHARE MODE</if>
+		</if>
+	</sql>
+</mapper>

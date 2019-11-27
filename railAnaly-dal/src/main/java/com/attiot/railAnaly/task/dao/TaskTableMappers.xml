@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.task.dao.TaskTableDao">
+	<resultMap id="TaskTable" type="com.attiot.railAnaly.task.entity.TaskTable">
+		<id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="tablename" column="tablename" javaType="String" jdbcType="VARCHAR"/>
+		<result property="tablecode" column="tablecode" javaType="String" jdbcType="VARCHAR"/>
+		<result property="creator" column="creator" javaType="String" jdbcType="VARCHAR"/>
+		<result property="createtime" column="createtime" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="modifor" column="modifor" javaType="String" jdbcType="VARCHAR"/>
+		<result property="modifytime" column="modifytime" javaType="Date" jdbcType="TIMESTAMP"/>
+
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.attiot.railAnaly.task.entity.TaskTable">
+		INSERT INTO a_task_table
+		(
+			id,
+			<include refid="column" />
+		) VALUES (
+			#{id,jdbcType=VARCHAR},
+			#{tablename,jdbcType=VARCHAR},
+			#{tablecode,jdbcType=VARCHAR},
+			#{creator,jdbcType=VARCHAR},
+			#{createtime,jdbcType=TIMESTAMP},
+			#{modifor,jdbcType=VARCHAR},
+			#{modifytime,jdbcType=TIMESTAMP}
+		)
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT REPLACE(UUID(),'-','')
+		</selectKey>
+	</insert>
+
+	<update id="update" parameterType="com.attiot.railAnaly.task.entity.TaskTable">
+		UPDATE a_task_table
+		SET
+			`tablename` = #{tablename},
+			`tablecode` = #{tablecode},
+			`creator` = #{creator},
+			`createtime` = #{createtime},
+			`modifor` = #{modifor},
+			`modifytime` = #{modifytime}
+		WHERE ID = #{id}
+	</update>
+
+	<delete id="delete" parameterType="String">
+		DELETE FROM a_task_table WHERE ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="String" resultMap="TaskTable">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM a_task_table
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+
+	<select id="getByParam" parameterType="com.attiot.railAnaly.task.param.TaskTableQueryParam" resultMap="TaskTable">
+		SELECT ID,
+		<include refid="column" />
+		FROM a_task_table
+		<include refid="where" />
+		LIMIT 1
+	</select>
+
+	<select id="query" parameterType="com.attiot.railAnaly.task.param.TaskTableQueryParam"	resultMap="TaskTable">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM a_task_table
+		<include refid="where" />
+		<include refid="basic" />
+	</select>
+
+	<select id="queryCount" parameterType="com.attiot.railAnaly.task.param.TaskTableQueryParam" resultType="Long">
+		SELECT COUNT(0)
+		FROM a_task_table
+		<include refid="where" />
+	</select>
+
+	<sql id="column">
+		`tablename`,
+		`tablecode`,
+		`creator`,
+		`createtime`,
+		`modifor`,
+		`modifytime`
+	</sql>
+
+	<sql id="columnTable">
+		a_task_table.`tablename`,
+		a_task_table.`tablecode`,
+		a_task_table.`creator`,
+		a_task_table.`createtime`,
+		a_task_table.`modifor`,
+		a_task_table.`modifytime`
+	</sql>
+
+	<sql id="where">
+		<where>
+			<if test="id != null"> AND id = #{id}</if>
+			<if test="tablename != null and tablename != '' "> AND tablename = #{tablename}</if>
+			<if test="tablecode != null and tablecode != '' "> AND tablecode = #{tablecode}</if>
+			<if test="creator != null"> AND creator = #{creator}</if>
+			<if test="createtime != null"> AND createtime = #{createtime}</if>
+			<if test="modifor != null"> AND modifor = #{modifor}</if>
+			<if test="modifytime != null"> AND modifytime = #{modifytime}</if>
+		</where>
+	</sql>
+
+	<sql id="basic">
+		<if test="column != null">ORDER BY #{column} #{sort}</if>
+		<if test="pageNo != -1">LIMIT #{startIndex}, #{pageSize}</if>
+		<if test="pageNo == -1 and limit != -1">LIMIT #{limit}</if>
+		<if test="lock">
+			<if test="lockMode == 0">FOR UPDATE</if>
+			<if test="lockMode == 1">LOCK IN SHARE MODE</if>
+		</if>
+	</sql>
+</mapper>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.attiot.railAnaly.task.dao.TaskSchedulerDao">
+	<resultMap id="TaskScheduler" type="com.attiot.railAnaly.task.entity.TaskScheduler">
+		<id property="id" column="id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="sourceNum" column="source_num" javaType="String" jdbcType="VARCHAR"/>
+		<result property="sourceJobId" column="source_job_id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="trainNo" column="train_no" javaType="String" jdbcType="VARCHAR"/>
+		<result property="trainUnit" column="train_unit" javaType="String" jdbcType="VARCHAR"/>
+		<result property="jobName" column="job_name" javaType="String" jdbcType="VARCHAR"/>
+		<result property="jobSource" column="job_source" javaType="String" jdbcType="VARCHAR"/>
+		<result property="workmonth" column="workmonth" javaType="Integer" jdbcType="INTEGER"/>
+		<result property="workDate" column="work_date" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="teamDepartId" column="team_depart_id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="workState" column="work_state" javaType="Integer" jdbcType="INTEGER"/>
+		<result property="creator" column="creator" javaType="String" jdbcType="VARCHAR"/>
+		<result property="createtime" column="createtime" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="modifor" column="modifor" javaType="String" jdbcType="VARCHAR"/>
+		<result property="modifytime" column="modifytime" javaType="Date" jdbcType="TIMESTAMP"/>
+		<result property="preTransferSource" column="pre_transfer_source" javaType="Integer" jdbcType="INTEGER"/>
+		<result property="remarks" column="remarks" javaType="String" jdbcType="VARCHAR"/>
+		<result property="ppointId" column="ppoint_id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="sourceNum" column="source_num" javaType="String" jdbcType="VARCHAR"/>
+
+		<result property="parentTaskId" column="parent_task_id" javaType="String" jdbcType="VARCHAR"/>
+		<result property="surplusValue" column="surplus_value"  javaType="float" jdbcType="DECIMAL"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.attiot.railAnaly.task.entity.TaskScheduler">
+		INSERT INTO a_task_scheduler
+		(
+			id,
+			<include refid="column" />
+		) VALUES (
+		#{id},
+		#{sourceNum},
+		#{sourceJobId,jdbcType=VARCHAR},
+		#{trainNo,jdbcType=VARCHAR},
+		#{trainUnit,jdbcType=VARCHAR},
+		#{jobName,jdbcType=VARCHAR},
+		#{jobSource,jdbcType=INTEGER},
+		#{preTransferSource},
+		#{workDate},
+		#{teamDepartId,jdbcType=VARCHAR},
+		#{workmonth},
+		#{workState,jdbcType=INTEGER},
+		#{ppointId},
+		#{remarks},
+		#{creator,jdbcType=VARCHAR},
+		#{createtime,jdbcType=TIMESTAMP},
+		#{modifor,jdbcType=VARCHAR},
+		#{modifytime,jdbcType=TIMESTAMP},
+		#{parentTaskId,jdbcType=VARCHAR},
+		#{surplusValue}
+		)
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			SELECT REPLACE(UUID(),'-','')
+		</selectKey>
+	</insert>
+
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO a_task_scheduler
+		(id,<include refid="column"/>)
+		values
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			#{item.id},
+			#{item.sourceNum},
+			#{item.sourceJobId,jdbcType=VARCHAR},
+			#{item.trainNo,jdbcType=VARCHAR},
+			#{item.trainUnit,jdbcType=VARCHAR},
+			#{item.jobName,jdbcType=VARCHAR},
+			#{item.jobSource,jdbcType=INTEGER},
+			#{item.preTransferSource},
+			#{item.workDate},
+			#{item.teamDepartId,jdbcType=VARCHAR},
+			#{item.workmonth},
+			#{item.workState,jdbcType=INTEGER},
+			#{item.ppointId},
+			#{item.remarks},
+			#{item.creator,jdbcType=VARCHAR},
+			#{item.createtime,jdbcType=TIMESTAMP},
+			#{item.modifor,jdbcType=VARCHAR},
+			#{item.modifytime,jdbcType=TIMESTAMP},
+			#{item.parentTaskId,jdbcType=VARCHAR},
+			#{item.surplusValue}
+			)
+		</foreach>
+	</insert>
+
+	<update id="update" parameterType="com.attiot.railAnaly.task.entity.TaskScheduler">
+		UPDATE a_task_scheduler
+		SET
+			source_num = #{sourceNum},
+        `source_job_id` = #{sourceJobId},
+        `train_no` = #{trainNo},
+        `train_unit` = #{trainUnit},
+        `job_name` = #{jobName},
+        `job_source` = #{jobSource},
+        pre_transfer_source =#{preTransferSource},
+        work_date = #{workDate},
+        `team_depart_id` = #{teamDepartId},
+        workmonth = #{workmonth},
+        `work_state` = #{workState},
+        ppoint_id = #{ppointId},
+        remarks = #{remarks},
+        `creator` = #{creator},
+        `createtime` = #{createtime},
+        `modifor` = #{modifor},
+        `modifytime` = #{modifytime},
+        `parentTaskId` = #{parentTaskId},
+        surplus_value = #{surplusValue}
+		WHERE ID = #{id}
+	</update>
+
+	<delete id="delete" parameterType="String">
+		DELETE FROM a_task_scheduler WHERE ID = #{id}
+	</delete>
+
+	<select id="getById" parameterType="String" resultMap="TaskScheduler">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM a_task_scheduler
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+
+	<select id="getByParam" parameterType="com.attiot.railAnaly.task.param.TaskSchedulerQueryParam" resultMap="TaskScheduler">
+		SELECT ID,
+		<include refid="column" />
+		FROM a_task_scheduler
+		<include refid="where" />
+		LIMIT 1
+	</select>
+
+	<select id="query" parameterType="com.attiot.railAnaly.task.param.TaskSchedulerQueryParam"	resultMap="TaskScheduler">
+		SELECT
+			ID,
+			<include refid="column" />
+		FROM a_task_scheduler
+		<include refid="where" />
+		<include refid="basic" />
+	</select>
+
+	<select id="queryCount" parameterType="com.attiot.railAnaly.task.param.TaskSchedulerQueryParam" resultType="Long">
+		SELECT COUNT(0)
+		FROM a_task_scheduler
+		<include refid="where" />
+	</select>
+
+	<sql id="column">
+		source_num,
+        `source_job_id`,
+        `train_no`,
+        `train_unit`,
+        `job_name`,
+        `job_source`,
+        pre_transfer_source,
+        work_date,
+        `team_depart_id`,
+        workmonth,
+        `work_state`,
+        ppoint_id,
+        remarks,
+        `creator`,
+        `createtime`,
+        `modifor`,
+        `modifytime`,
+        `parent_task_id`,
+        surplus_value
+	</sql>
+
+	<sql id="columnTable">
+		a_task_scheduler.`source_job_id`,
+		a_task_scheduler.`train_no`,
+		a_task_scheduler.`train_unit`,
+		a_task_scheduler.`job_name`,
+		a_task_scheduler.`job_source`,
+		a_task_scheduler.`workmonth`,
+		a_task_scheduler.`work_date`,
+		a_task_scheduler.`team_depart_id`,
+		a_task_scheduler.`work_state`,
+		a_task_scheduler.`creator`,
+		a_task_scheduler.`createtime`,
+		a_task_scheduler.`modifor`,
+		a_task_scheduler.`modifytime`
+	</sql>
+
+	<sql id="where">
+		<where>
+			<if test="id != null"> AND id = #{id}</if>
+			<if test="sourceJobId != null"> AND source_job_id = #{sourceJobId}</if>
+			<if test="trainNo != null"> AND train_no = #{trainNo}</if>
+			<if test="trainUnit != null"> AND train_unit = #{trainUnit}</if>
+			<if test="jobName != null"> AND job_name = #{jobName}</if>
+			<if test="jobSource != null"> AND job_source = #{jobSource}</if>
+			<if test="workmonth != null"> AND workmonth = #{workmonth}</if>
+			<if test="workDate != null"> AND work_date = #{workDate}</if>
+			<if test="teamDepartId != null"> AND team_depart_id = #{teamDepartId}</if>
+			<if test="workState != null"> AND work_state = #{workState}</if>
+			<if test="creator != null"> AND creator = #{creator}</if>
+			<if test="createtime != null"> AND createtime = #{createtime}</if>
+			<if test="modifor != null"> AND modifor = #{modifor}</if>
+			<if test="modifytime != null"> AND modifytime = #{modifytime}</if>
+		</where>
+	</sql>
+
+	<sql id="basic">
+		<if test="column != null">ORDER BY #{column} #{sort}</if>
+		<if test="pageNo != -1">LIMIT #{startIndex}, #{pageSize}</if>
+		<if test="pageNo == -1 and limit != -1">LIMIT #{limit}</if>
+		<if test="lock">
+			<if test="lockMode == 0">FOR UPDATE</if>
+			<if test="lockMode == 1">LOCK IN SHARE MODE</if>
+		</if>
+	</sql>
+</mapper>
